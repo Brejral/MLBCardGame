@@ -37,7 +37,7 @@ public class Game extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		gameView = new GameView(this);
-		setContentView(R.layout.game);
+		setContentView(gameView);
 		
 		final Animation zoomCardAnimation = AnimationUtils.loadAnimation(this, R.animator.card_zoom_animation);
 		
