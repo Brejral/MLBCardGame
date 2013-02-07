@@ -1,5 +1,8 @@
 package com.brejral.mlbcardgame;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+
 import javax.microedition.khronos.opengles.GL10;
 
 import android.opengl.GLSurfaceView.Renderer;
@@ -28,5 +31,12 @@ public class GameRenderer implements Renderer {
 		gl.glBlendFunc(GL10.GL_ONE, GL10.GL_ONE);
 	}
 	
+	class Background {
+		
+		public Background() {
+			ByteBuffer byteBuf = ByteBuffer.allocateDirect(vertices.length * 4);
+			byteBuf.order(ByteOrder.nativeOrder());
+		}
+	}
 
 }
