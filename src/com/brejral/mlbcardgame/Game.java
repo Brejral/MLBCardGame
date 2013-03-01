@@ -11,8 +11,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -38,34 +36,6 @@ public class Game extends Activity {
 		super.onCreate(savedInstanceState);
 		gameView = new GameView(this);
 		setContentView(gameView);
-		
-		final Animation zoomCardAnimation = AnimationUtils.loadAnimation(this, R.animator.card_zoom_animation);
-		
-		resultText = (TextView)findViewById(R.id.resultText);
-		battingOrderText = (TextView)findViewById(R.id.battingOrderText);
-		
-		pitcherCard = (ImageView)findViewById(R.id.pitcherCard);
-		batterCard = (ImageView)findViewById(R.id.batterCard);
-		runner1Card = (ImageView)findViewById(R.id.runner1Card);
-		runner2Card = (ImageView)findViewById(R.id.runner2Card);
-		runner3Card = (ImageView)findViewById(R.id.runner3Card);
-
-		pitcher = homeTeam.positions[1];
-		batter = awayTeam.battingOrder[awayTeam.battingOrderNum];
-		
-		pitcherCard.setImageResource(pitcher.imageId);
-		batterCard.setImageResource(batter.imageId);
-		
-		setPitchButtons();
-		
-		pitcherCard.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {	
-				pitcherCard.startAnimation(zoomCardAnimation);
-			}
-		});
-		
-		updateView();
 	}
 	
 	public void setPitchButtons() {
