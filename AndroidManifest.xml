@@ -8,8 +8,8 @@
 				<category android:name="android.intent.category.LAUNCHER"/>
 			</intent-filter>
 		</activity>
-		<activity android:name="com.brejral.mlbcardgame.ExhibitionMenu" android:screenOrientation="portrait" android:theme="@android:style/Theme.Light.NoTitleBar"/>
-		<activity android:name="com.brejral.mlbcardgame.ExhibitionSelectTeam" android:screenOrientation="portrait" android:theme="@android:style/Theme.Light.NoTitleBar"/>
-		<activity android:name="com.brejral.mlbcardgame.Game" android:screenOrientation="portrait" android:theme="@android:style/Theme.Light.NoTitleBar"/>
+		<activity android:name="com.brejral.mlbcardgame.exhibition.ExhibitionMenu" android:screenOrientation="portrait" android:theme="@android:style/Theme.Light.NoTitleBar"/>
+		<activity android:name="com.brejral.mlbcardgame.exhibition.ExhibitionSelectTeam" android:screenOrientation="portrait" android:theme="@android:style/Theme.Light.NoTitleBar"/>
+		<activity android:name="com.brejral.mlbcardgame.game.Game" android:screenOrientation="portrait" android:theme="@android:style/Theme.Light.NoTitleBar"/>
 	</application>
 </manifest>

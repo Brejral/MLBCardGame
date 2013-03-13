@@ -9,7 +9,7 @@ public class Team
 	public int logo;
 	public Card battingOrder[] = new Card[9];
 	public Card positions[] = new Card[10];
-	int battingOrderNum = 0;
+	public int battingOrderNum = 0;
 	
 	public Team() {
 		

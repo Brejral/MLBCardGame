@@ -1,9 +1,13 @@
-package com.brejral.mlbcardgame;
+package com.brejral.mlbcardgame.game;
 
 import java.util.Random;
 
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.content.Context;
+import android.content.pm.ConfigurationInfo;
 import android.graphics.Color;
+import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -16,9 +20,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.brejral.mlbcardgame.Card;
+import com.brejral.mlbcardgame.R;
+import com.brejral.mlbcardgame.Team;
+
 public class Game extends Activity {
-	private GameView gameView;
-	public Card batter, pitcher, runner1, runner2, runner3;
+	private GLSurfaceView gameView;
+	public static Card batter, pitcher, runner1, runner2, runner3;
 	public static Team homeTeam, awayTeam;
 	public ImageView pitcherCard, batterCard, runner1Card, runner2Card, runner3Card;
 	public TextView resultText, battingOrderText;
@@ -34,7 +42,19 @@ public class Game extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		gameView = new GameView(this);
+		gameView = new GLSurfaceView(this);
+		final ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+		final ConfigurationInfo configurationInfo = activityManager.getDeviceConfigurationInfo();
+		final boolean supportsEs2 = configurationInfo.reqGlEsVersion >= 0x20000;
+		if (supportsEs2)
+		{
+			gameView.setEGLContextClientVersion(2);
+			gameView.setRenderer(new GameRenderer(this));
+		}
+		else {
+			return;
+		}
+			
 		setContentView(gameView);
 	}
 	

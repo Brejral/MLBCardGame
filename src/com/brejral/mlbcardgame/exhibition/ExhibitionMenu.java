@@ -1,4 +1,4 @@
-package com.brejral.mlbcardgame;
+package com.brejral.mlbcardgame.exhibition;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -9,6 +9,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
+
+import com.brejral.mlbcardgame.MainMenu;
+import com.brejral.mlbcardgame.R;
+import com.brejral.mlbcardgame.Team;
+import com.brejral.mlbcardgame.game.Game;
 
 public class ExhibitionMenu extends Activity
 {

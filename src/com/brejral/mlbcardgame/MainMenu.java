@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
+import com.brejral.mlbcardgame.exhibition.ExhibitionMenu;
+
 public class MainMenu extends Activity
 {
 

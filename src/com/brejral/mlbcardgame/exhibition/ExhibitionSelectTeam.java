@@ -1,4 +1,4 @@
-package com.brejral.mlbcardgame;
+package com.brejral.mlbcardgame.exhibition;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +9,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+
+import com.brejral.mlbcardgame.Engine;
+import com.brejral.mlbcardgame.R;
+import com.brejral.mlbcardgame.RowItem;
+import com.brejral.mlbcardgame.Team;
 
 public class ExhibitionSelectTeam extends Activity implements OnItemClickListener
 {
