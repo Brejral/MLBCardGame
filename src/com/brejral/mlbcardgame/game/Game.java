@@ -23,6 +23,7 @@ public class Game {
 		awayTeam = away;
 		pitcher = homeTeam.positions[1];
 		batter = awayTeam.battingOrder[awayTeam.battingOrderNum];
+		result = "";
 
 	}
 		

@@ -29,6 +29,9 @@ public class GameActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.game);
+
+		resultText = (TextView)findViewById(R.id.resultText);
+		battingOrderText = (TextView)findViewById(R.id.battingOrderText);
 		
 		gameView = (GameView)findViewById(R.id.gl_surface_view);
 		
@@ -47,6 +50,8 @@ public class GameActivity extends Activity {
 		else {
 			return;
 		}
+		setPitchButtons();
+		updateView();
 	}
 	
 	@Override
