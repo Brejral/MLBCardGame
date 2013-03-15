@@ -2,36 +2,15 @@ package com.brejral.mlbcardgame.game;
 
 import java.util.Random;
 
-import android.app.Activity;
-import android.app.ActivityManager;
-import android.content.Context;
-import android.content.pm.ConfigurationInfo;
-import android.graphics.Color;
-import android.opengl.GLSurfaceView;
-import android.os.Bundle;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
 import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.brejral.mlbcardgame.Card;
-import com.brejral.mlbcardgame.R;
 import com.brejral.mlbcardgame.Team;
 
-public class Game extends Activity {
-	private GLSurfaceView gameView;
-	public static Card batter, pitcher, runner1, runner2, runner3;
-	public static Team homeTeam, awayTeam;
-	public ImageView pitcherCard, batterCard, runner1Card, runner2Card, runner3Card;
-	public TextView resultText, battingOrderText;
+public class Game {
+	public Card batter, pitcher, runner1, runner2, runner3;
+	public Team homeTeam, awayTeam;
 	public String pitch;
-	public int pit;
 	public Random rand = new Random();
 	public int inning = 1, outs;
 	public boolean topOfInning = true;
@@ -39,50 +18,19 @@ public class Game extends Activity {
 	public int runnerAdvance;
 	public String result;
 	
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		gameView = new GLSurfaceView(this);
-		final ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-		final ConfigurationInfo configurationInfo = activityManager.getDeviceConfigurationInfo();
-		final boolean supportsEs2 = configurationInfo.reqGlEsVersion >= 0x20000;
-		if (supportsEs2)
-		{
-			gameView.setEGLContextClientVersion(2);
-			gameView.setRenderer(new GameRenderer(this));
-		}
-		else {
-			return;
-		}
-			
-		setContentView(gameView);
+	public Game(Team home, Team away) {
+		homeTeam = home;
+		awayTeam = away;
+		pitcher = homeTeam.positions[1];
+		batter = awayTeam.battingOrder[awayTeam.battingOrderNum];
+
 	}
-	
-	public void setPitchButtons() {
-		LinearLayout pitchButtons = (LinearLayout)findViewById(R.id.pitchButtons);
-		for(int i = 0; i < pitcher.pitches.length; i++) {
-			Button btnTag = new Button(this);
-			btnTag.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, 60));
-			btnTag.setText(pitcher.pitches[i]);
-			btnTag.setId(i);
-			pit = i;
-			btnTag.setOnClickListener(new OnClickListener() {
-				public int p = pit;
-				@Override
-				public void onClick(View v) {
-					pitch(p);
-				}
-			});
-			pitchButtons.addView(btnTag);
-		}
-	}
-	
+		
 	public void pitch(int n) {
 		pitchRoll(n);
 		advanceBatterNum();
 		checkEndOfInning();
 		updateBatter();
-		updateView();
 	}
 	
 	public void pitchRoll(int n) {
@@ -495,52 +443,6 @@ public class Game extends Activity {
 				inning++;
 			}
 			updatePitcher();
-		}
-	}
-
-	public void updateView() {
-		resultText.setText(result);
-		pitcherCard.setImageResource(pitcher.imageId);
-		batterCard.setImageResource(batter.imageId);
-		if (runner1 != null)
-			runner1Card.setImageResource(runner1.imageId);
-		else
-			runner1Card.setImageResource(0);
-		if (runner2 != null)
-			runner2Card.setImageResource(runner2.imageId);
-		else
-			runner2Card.setImageResource(0);			
-		if (runner3 != null)
-			runner3Card.setImageResource(runner3.imageId);
-		else
-			runner3Card.setImageResource(0);
-		updateBattingOrder();
-	}
-	
-	public void updateBattingOrder() {
-		battingOrderText.setText("");
-		if (topOfInning) {
-			for (int i = 0; i < awayTeam.battingOrder.length; i++) {
-				String playerString = (i+1)+" "+awayTeam.findPosition(i)+" "+awayTeam.battingOrder[i].name+"\n";
-				if (awayTeam.battingOrderNum == i) {
-					SpannableString playerSpannableString = new SpannableString(playerString);
-					playerSpannableString.setSpan(new ForegroundColorSpan(Color.YELLOW), 0, playerString.length(), 0);
-					battingOrderText.append(playerSpannableString);
-				} else {
-					battingOrderText.append(playerString);
-				}
-			}
-		} else {
-			for (int i = 0; i < homeTeam.battingOrder.length; i++) {
-				String playerString = (i+1)+" "+homeTeam.findPosition(i)+" "+homeTeam.battingOrder[i].name+"\n";
-				if (homeTeam.battingOrderNum == i) {
-					SpannableString playerSpannableString = new SpannableString(playerString);
-					playerSpannableString.setSpan(new ForegroundColorSpan(Color.YELLOW), 0, playerString.length(), 0);
-					battingOrderText.append(playerSpannableString);
-				} else {
-					battingOrderText.append(playerString);
-				}	
-			}			
 		}
 	}
 }

@@ -14,9 +14,11 @@ import com.brejral.mlbcardgame.MainMenu;
 import com.brejral.mlbcardgame.R;
 import com.brejral.mlbcardgame.Team;
 import com.brejral.mlbcardgame.game.Game;
+import com.brejral.mlbcardgame.game.GameActivity;
 
 public class ExhibitionMenu extends Activity
 {
+	public Game game;
 	public static Team homeTeam;
 	public static Team awayTeam;
 	
@@ -67,9 +69,9 @@ public class ExhibitionMenu extends Activity
 		startButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Game.homeTeam = homeTeam;
-				Game.awayTeam = awayTeam;
-				Intent gameIntent = new Intent(getApplicationContext(), Game.class);
+				game = new Game(homeTeam, awayTeam);
+				GameActivity.game = game;
+				Intent gameIntent = new Intent(getApplicationContext(), GameActivity.class);
 				ExhibitionMenu.this.startActivity(gameIntent);
 				ExhibitionMenu.this.finish();
 			}

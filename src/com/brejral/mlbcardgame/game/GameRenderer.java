@@ -28,6 +28,8 @@ public class GameRenderer implements GLSurfaceView.Renderer
 	private static final String TAG = "GameRenderer";
 
 	private final Context mActivityContext;
+	
+	private Game game; 
 
 	/**
 	 * Store the model matrix. This matrix is used to move models from object space (where each model can be thought
@@ -93,9 +95,10 @@ public class GameRenderer implements GLSurfaceView.Renderer
 	/**
 	 * Initialize the model data.
 	 */
-	public GameRenderer(final Context activityContext)
+	public GameRenderer(final Context activityContext, Game inputgame)
 	{	
 		mActivityContext = activityContext;
+		game = inputgame;
 
 		// Define points for an image.		
 
@@ -236,8 +239,9 @@ public class GameRenderer implements GLSurfaceView.Renderer
 		mProgramHandle = ShaderHelper.createAndLinkProgram(vertexShaderHandle, fragmentShaderHandle, 
 				new String[] {"a_Position",  "a_Color", "a_Normal", "a_TexCoordinate"});								                                							       
                 
-        // Load the texture
+        // Load the textures
         mBackgroundTextureDataHandle = TextureHelper.loadTexture(mActivityContext, R.drawable.baseball_diamond);
+		loadCardTextures();
 	}	
 
 	@Override
@@ -288,16 +292,63 @@ public class GameRenderer implements GLSurfaceView.Renderer
         Matrix.scaleM(mModelMatrix, 0, 1.0f, 1.7066666667f, 1.0f);
         drawImage();
         
-        // Draw the batter card.
-        if (Game.pitcher != null) {
-	        mPitcherTextureDataHandle = TextureHelper.loadTexture(mActivityContext, Game.pitcher.imageId);
-	        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mPitcherTextureDataHandle);
+        // Draw the pitcher card.
+        if (mPitcherTextureDataHandle != 0) {
 	        Matrix.setIdentityM(mModelMatrix, 0);
-	        Matrix.scaleM(mModelMatrix, 0, 0.10f, 0.14f, 1.0f);
+	        Matrix.translateM(mModelMatrix, 0, 0f, -.1f, .01f);
+	        Matrix.scaleM(mModelMatrix, 0, 0.25f, 0.35f, 1.0f);
+	        GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+	        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mPitcherTextureDataHandle);
+	        GLES20.glUniform1i(mTextureUniformHandle, 0);
 	        drawImage();
         }
-      
-	}				
+
+        // Draw the batter card.
+        if (mBatterTextureDataHandle != 0) {
+	        Matrix.setIdentityM(mModelMatrix, 0);
+	        Matrix.translateM(mModelMatrix, 0, 0f, -0.95f, .01f);
+	        Matrix.scaleM(mModelMatrix, 0, 0.25f, 0.35f, 1.0f);
+	        GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+	        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mBatterTextureDataHandle);
+	        GLES20.glUniform1i(mTextureUniformHandle, 0);
+	        drawImage();
+        }
+
+        // Draw the runner 1 card.
+        if (mRunner1TextureDataHandle != 0) {
+	        Matrix.setIdentityM(mModelMatrix, 0);
+	        Matrix.translateM(mModelMatrix, 0, .70f, -0.1f, .01f);
+	        Matrix.scaleM(mModelMatrix, 0, 0.25f, 0.35f, 1.0f);
+	        GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+	        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mRunner1TextureDataHandle);
+	        GLES20.glUniform1i(mTextureUniformHandle, 0);
+	        drawImage();
+        }
+
+        // Draw the runner 2 card.
+        if (mRunner2TextureDataHandle != 0) {
+	        Matrix.setIdentityM(mModelMatrix, 0);
+	        Matrix.translateM(mModelMatrix, 0, 0f, 0.75f, .01f);
+	        Matrix.scaleM(mModelMatrix, 0, 0.25f, 0.35f, 1.0f);
+	        GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+	        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mRunner2TextureDataHandle);
+	        GLES20.glUniform1i(mTextureUniformHandle, 0);
+	        drawImage();
+        }
+
+        // Draw the runner 3 card.
+        if (mRunner3TextureDataHandle != 0) {
+	        Matrix.setIdentityM(mModelMatrix, 0);
+	        Matrix.translateM(mModelMatrix, 0, -.70f, -0.1f, .01f);
+	        Matrix.scaleM(mModelMatrix, 0, 0.25f, 0.35f, 1.0f);
+	        GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+	        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mRunner3TextureDataHandle);
+	        GLES20.glUniform1i(mTextureUniformHandle, 0);
+	        drawImage();
+        }
+
+	}
+	
 
 	/**
 	 * Draws an image.
@@ -335,4 +386,42 @@ public class GameRenderer implements GLSurfaceView.Renderer
         // Draw the Image.
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6);                               
 	}	
+	
+	public void loadCardTextures() {
+		
+		if (game.pitcher != null) {
+			mPitcherTextureDataHandle = TextureHelper.loadTexture(mActivityContext, game.pitcher.imageId);
+			GLES20.glGenerateMipmap(GLES20.GL_TEXTURE_2D);
+		} else {
+			mPitcherTextureDataHandle = 0;
+		}
+		
+		if (game.batter != null) {
+			mBatterTextureDataHandle = TextureHelper.loadTexture(mActivityContext, game.batter.imageId);
+			GLES20.glGenerateMipmap(GLES20.GL_TEXTURE_2D);
+		} else {
+			mBatterTextureDataHandle = 0;
+		}
+		
+		if (game.runner1 != null) {
+			mRunner1TextureDataHandle = TextureHelper.loadTexture(mActivityContext, game.runner1.imageId);
+			GLES20.glGenerateMipmap(GLES20.GL_TEXTURE_2D);
+		} else {
+			mRunner1TextureDataHandle = 0;
+		}
+
+		if (game.runner2 != null) {
+			mRunner2TextureDataHandle = TextureHelper.loadTexture(mActivityContext, game.runner2.imageId);
+			GLES20.glGenerateMipmap(GLES20.GL_TEXTURE_2D);
+		} else {
+			mRunner2TextureDataHandle = 0;
+		}
+
+		if (game.runner3 != null) {
+			mRunner3TextureDataHandle = TextureHelper.loadTexture(mActivityContext, game.runner3.imageId);
+			GLES20.glGenerateMipmap(GLES20.GL_TEXTURE_2D);
+		} else {
+			mRunner3TextureDataHandle = 0;
+		}
+}
 }

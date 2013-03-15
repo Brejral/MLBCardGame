@@ -2,13 +2,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
-    <ImageView 
-        android:id="@+id/field"
+    <com.brejral.mlbcardgame.game.GameView 
+        android:id="@+id/gl_surface_view"
         android:layout_height="match_parent"
-        android:layout_width="match_parent"
-        android:src="@drawable/baseball_diamond"
-        android:gravity="bottom"
-        android:scaleType="fitEnd"/>
+        android:layout_width="match_parent" />
 
     <TextView
         android:id="@+id/resultText"
@@ -17,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_alignBottom="@id/field"
+        android:layout_alignBottom="@id/gl_surface_view"
         android:layout_marginBottom="200dp" />
     
     <TextView 
@@ -27,60 +24,11 @@
         android:textSize="12sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/field"
-        android:layout_alignLeft="@id/field"
+        android:layout_alignTop="@id/gl_surface_view"
+        android:layout_alignLeft="@id/gl_surface_view"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp" />
-    
-    <ImageView
-        android:id="@+id/pitcherCard"
-        android:layout_width="75dp"
-        android:layout_height="105dp"
-        android:layout_alignBottom="@id/field"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="225dp"
-        android:clickable="true" />
-    
-    <ImageView 
-        android:id="@+id/batterCard"
-        android:layout_width="75dp"
-        android:layout_height="105dp"
-        android:layout_alignBottom="@id/field"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="75dp"
-        android:clickable="true"/>
-
-        <ImageView 
-        android:id="@+id/runner2Card"
-        android:layout_width="75dp"
-        android:layout_height="105dp"
-        android:layout_alignBottom="@id/field"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="395dp"
-        android:clickable="true" />
-        
-        <ImageView 
-        android:id="@+id/runner1Card"
-        android:layout_width="75dp"
-        android:layout_height="105dp"
-        android:layout_alignBottom="@id/field"
-        android:layout_alignRight="@id/field"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="225dp"
-        android:layout_marginRight="10dp"
-        android:clickable="true" />
-
-        <ImageView 
-        android:id="@+id/runner3Card"
-        android:layout_width="75dp"
-        android:layout_height="105dp"
-        android:layout_alignBottom="@id/field"
-        android:layout_alignLeft="@id/field"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="225dp"
-        android:layout_marginLeft="10dp"
-        android:clickable="true" />
-        
+            
         <LinearLayout 
             android:id="@+id/pitchButtons"
             android:layout_width="wrap_content"
