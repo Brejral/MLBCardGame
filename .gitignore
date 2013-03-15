@@ -31,3 +31,4 @@ local.properties
 gen/
 libs/
 *project*
+.DS_Store
