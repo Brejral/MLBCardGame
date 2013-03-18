@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
@@ -42,10 +43,12 @@ public class GameActivity extends Activity {
 		if (supportsEs2)
 		{
 			gameView.setEGLContextClientVersion(2);
-			
+
+			final DisplayMetrics displayMetrics = new DisplayMetrics();
+			getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 			
 			gameRenderer = new GameRenderer(this, game);
-			gameView.setRenderer(gameRenderer);
+			gameView.setRenderer(gameRenderer, displayMetrics);
 		}
 		else {
 			return;
@@ -82,7 +85,6 @@ public class GameActivity extends Activity {
 				public void onClick(View v) {
 					game.pitch(p);
 					updateView();
-					gameRenderer.loadCardTextures();
 				}
 			});
 			pitchButtons.addView(btnTag);

@@ -7,6 +7,7 @@ public class Card {
 	public boolean batsR, batsL, batsS, throwsR;
 	public boolean throwsL;
 	public boolean _c, _1b, _2b, _3b, _ss, _lf, _cf, _rf, _dh, _sp, _rp, _cp;
+	public int textureDataHandle;
 	
 	// stats12* - Stats from 2012 
 	// [0] - plate appearances

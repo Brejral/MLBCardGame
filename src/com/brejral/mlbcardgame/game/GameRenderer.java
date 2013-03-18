@@ -85,11 +85,6 @@ public class GameRenderer implements GLSurfaceView.Renderer
 
 	/** This is a handle to our texture data. */
 	private int mBackgroundTextureDataHandle;
-	private int mBatterTextureDataHandle;
-	private int mPitcherTextureDataHandle;
-	private int mRunner1TextureDataHandle;
-	private int mRunner2TextureDataHandle;
-	private int mRunner3TextureDataHandle;
 	
 
 	/**
@@ -293,56 +288,56 @@ public class GameRenderer implements GLSurfaceView.Renderer
         drawImage();
         
         // Draw the pitcher card.
-        if (mPitcherTextureDataHandle != 0) {
+        if (game.pitcher != null) {
 	        Matrix.setIdentityM(mModelMatrix, 0);
 	        Matrix.translateM(mModelMatrix, 0, 0f, -.1f, .01f);
 	        Matrix.scaleM(mModelMatrix, 0, 0.25f, 0.35f, 1.0f);
 	        GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-	        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mPitcherTextureDataHandle);
+	        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, game.pitcher.textureDataHandle);
 	        GLES20.glUniform1i(mTextureUniformHandle, 0);
 	        drawImage();
         }
 
         // Draw the batter card.
-        if (mBatterTextureDataHandle != 0) {
+        if (game.batter != null) {
 	        Matrix.setIdentityM(mModelMatrix, 0);
 	        Matrix.translateM(mModelMatrix, 0, 0f, -0.95f, .01f);
 	        Matrix.scaleM(mModelMatrix, 0, 0.25f, 0.35f, 1.0f);
 	        GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-	        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mBatterTextureDataHandle);
+	        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, game.batter.textureDataHandle);
 	        GLES20.glUniform1i(mTextureUniformHandle, 0);
 	        drawImage();
         }
 
         // Draw the runner 1 card.
-        if (mRunner1TextureDataHandle != 0) {
+        if (game.runner1 != null) {
 	        Matrix.setIdentityM(mModelMatrix, 0);
 	        Matrix.translateM(mModelMatrix, 0, .70f, -0.1f, .01f);
 	        Matrix.scaleM(mModelMatrix, 0, 0.25f, 0.35f, 1.0f);
 	        GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-	        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mRunner1TextureDataHandle);
+	        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, game.runner1.textureDataHandle);
 	        GLES20.glUniform1i(mTextureUniformHandle, 0);
 	        drawImage();
         }
 
         // Draw the runner 2 card.
-        if (mRunner2TextureDataHandle != 0) {
+        if (game.runner2 != null) {
 	        Matrix.setIdentityM(mModelMatrix, 0);
 	        Matrix.translateM(mModelMatrix, 0, 0f, 0.75f, .01f);
 	        Matrix.scaleM(mModelMatrix, 0, 0.25f, 0.35f, 1.0f);
 	        GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-	        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mRunner2TextureDataHandle);
+	        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, game.runner2.textureDataHandle);
 	        GLES20.glUniform1i(mTextureUniformHandle, 0);
 	        drawImage();
         }
 
         // Draw the runner 3 card.
-        if (mRunner3TextureDataHandle != 0) {
+        if (game.runner3 != null) {
 	        Matrix.setIdentityM(mModelMatrix, 0);
 	        Matrix.translateM(mModelMatrix, 0, -.70f, -0.1f, .01f);
 	        Matrix.scaleM(mModelMatrix, 0, 0.25f, 0.35f, 1.0f);
 	        GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-	        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mRunner3TextureDataHandle);
+	        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, game.runner3.textureDataHandle);
 	        GLES20.glUniform1i(mTextureUniformHandle, 0);
 	        drawImage();
         }
@@ -389,39 +384,13 @@ public class GameRenderer implements GLSurfaceView.Renderer
 	
 	public void loadCardTextures() {
 		
-		if (game.pitcher != null) {
-			mPitcherTextureDataHandle = TextureHelper.loadTexture(mActivityContext, game.pitcher.imageId);
+		for (int i = 0; i < game.homeTeam.positions.length; i++) {
+			game.homeTeam.positions[i].textureDataHandle = TextureHelper.loadTexture(mActivityContext, game.homeTeam.positions[i].imageId);
 			GLES20.glGenerateMipmap(GLES20.GL_TEXTURE_2D);
-		} else {
-			mPitcherTextureDataHandle = 0;
 		}
-		
-		if (game.batter != null) {
-			mBatterTextureDataHandle = TextureHelper.loadTexture(mActivityContext, game.batter.imageId);
+		for (int i = 0; i < game.awayTeam.positions.length; i++) {
+			game.awayTeam.positions[i].textureDataHandle = TextureHelper.loadTexture(mActivityContext, game.awayTeam.positions[i].imageId);
 			GLES20.glGenerateMipmap(GLES20.GL_TEXTURE_2D);
-		} else {
-			mBatterTextureDataHandle = 0;
 		}
-		
-		if (game.runner1 != null) {
-			mRunner1TextureDataHandle = TextureHelper.loadTexture(mActivityContext, game.runner1.imageId);
-			GLES20.glGenerateMipmap(GLES20.GL_TEXTURE_2D);
-		} else {
-			mRunner1TextureDataHandle = 0;
-		}
-
-		if (game.runner2 != null) {
-			mRunner2TextureDataHandle = TextureHelper.loadTexture(mActivityContext, game.runner2.imageId);
-			GLES20.glGenerateMipmap(GLES20.GL_TEXTURE_2D);
-		} else {
-			mRunner2TextureDataHandle = 0;
-		}
-
-		if (game.runner3 != null) {
-			mRunner3TextureDataHandle = TextureHelper.loadTexture(mActivityContext, game.runner3.imageId);
-			GLES20.glGenerateMipmap(GLES20.GL_TEXTURE_2D);
-		} else {
-			mRunner3TextureDataHandle = 0;
-		}
-}
+	}
 }

@@ -12,18 +12,17 @@ public class Game {
 	public Team homeTeam, awayTeam;
 	public String pitch;
 	public Random rand = new Random();
-	public int inning = 1, outs;
+	public int inning = 1, outs = 0;
 	public boolean topOfInning = true;
 	public int homeScore, awayScore;
 	public int runnerAdvance;
-	public String result;
+	public String result = "";
 	
 	public Game(Team home, Team away) {
 		homeTeam = home;
 		awayTeam = away;
 		pitcher = homeTeam.positions[1];
 		batter = awayTeam.battingOrder[awayTeam.battingOrderNum];
-		result = "";
 
 	}
 		
