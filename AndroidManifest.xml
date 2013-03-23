@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.brejral.mlbcardgame" android:versionCode="1" android:versionName="1.0">
 <uses-feature android:glEsVersion="0x00020000" />
-<uses-sdk android:minSdkVersion="8" android:targetSdkVersion="17"/>
+<uses-sdk android:minSdkVersion="11" android:targetSdkVersion="17"/>
 	<application android:allowBackup="true" android:icon="@drawable/ic_launcher" android:label="@string/app_name" android:theme="@android:style/Theme.Light.NoTitleBar">
 		<activity android:name="com.brejral.mlbcardgame.MainMenu" android:screenOrientation="portrait">
 			<intent-filter>
@@ -10,6 +10,6 @@
 		</activity>
 		<activity android:name="com.brejral.mlbcardgame.exhibition.ExhibitionMenu" android:screenOrientation="portrait" android:theme="@android:style/Theme.Light.NoTitleBar"/>
 		<activity android:name="com.brejral.mlbcardgame.exhibition.ExhibitionSelectTeam" android:screenOrientation="portrait" android:theme="@android:style/Theme.Light.NoTitleBar"/>
-		<activity android:name="com.brejral.mlbcardgame.game.GameActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.Light.NoTitleBar"/>
+		<activity android:name="com.brejral.mlbcardgame.game.GameActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen"/>
 	</application>
 </manifest>

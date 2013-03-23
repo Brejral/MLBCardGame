@@ -8,6 +8,8 @@ import com.brejral.mlbcardgame.Card;
 import com.brejral.mlbcardgame.Team;
 
 public class Game {
+	@SuppressWarnings("unused")
+	private final String TAG = "Game";
 	public Card batter, pitcher, runner1, runner2, runner3;
 	public Team homeTeam, awayTeam;
 	public String pitch;

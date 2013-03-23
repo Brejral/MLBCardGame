@@ -12,18 +12,26 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
+import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.brejral.mlbcardgame.R;
 
 public class GameActivity extends Activity {
+	@SuppressWarnings("unused")
+	private final String TAG = "GameActivity";
 	private GameView gameView;
 	public GameRenderer gameRenderer;
 	public static Game game;
 	public TextView resultText, battingOrderText;
+	public ImageView scoreboard;
 	public int pit;
+	public float sHeight, sWidth, sRatio;
+	public int sMargin;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -33,6 +41,7 @@ public class GameActivity extends Activity {
 
 		resultText = (TextView)findViewById(R.id.resultText);
 		battingOrderText = (TextView)findViewById(R.id.battingOrderText);
+		scoreboard = (ImageView)findViewById(R.id.scoreboard);
 		
 		gameView = (GameView)findViewById(R.id.gl_surface_view);
 		
@@ -40,12 +49,12 @@ public class GameActivity extends Activity {
 		final ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
 		final ConfigurationInfo configurationInfo = activityManager.getDeviceConfigurationInfo();
 		final boolean supportsEs2 = configurationInfo.reqGlEsVersion >= 0x20000;
+		final DisplayMetrics displayMetrics = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 		if (supportsEs2)
 		{
 			gameView.setEGLContextClientVersion(2);
 
-			final DisplayMetrics displayMetrics = new DisplayMetrics();
-			getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 			
 			gameRenderer = new GameRenderer(this, game);
 			gameView.setRenderer(gameRenderer, displayMetrics);
@@ -53,6 +62,7 @@ public class GameActivity extends Activity {
 		else {
 			return;
 		}
+		setLayoutParameters();			
 		setPitchButtons();
 		updateView();
 	}
@@ -73,9 +83,12 @@ public class GameActivity extends Activity {
 	
 	public void setPitchButtons() {
 		LinearLayout pitchButtons = (LinearLayout)findViewById(R.id.pitchButtons);
+		LayoutParams layoutBottom = pitchButtons.getLayoutParams();
+		((MarginLayoutParams) layoutBottom).setMargins(0, 0, 0, sMargin);
+		pitchButtons.setLayoutParams(layoutBottom);
 		for(int i = 0; i < game.pitcher.pitches.length; i++) {
 			Button btnTag = new Button(this);
-			btnTag.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, 60));
+			btnTag.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, (int)sWidth/9));
 			btnTag.setText(game.pitcher.pitches[i]);
 			btnTag.setId(i);
 			pit = i;
@@ -85,6 +98,7 @@ public class GameActivity extends Activity {
 				public void onClick(View v) {
 					game.pitch(p);
 					updateView();
+					
 				}
 			});
 			pitchButtons.addView(btnTag);
@@ -123,4 +137,21 @@ public class GameActivity extends Activity {
 		}
 	}
 
+	public void setLayoutParameters() {
+		final DisplayMetrics displayMetrics = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+		sHeight = displayMetrics.heightPixels;
+		sWidth = displayMetrics.widthPixels;
+		sRatio = sHeight/sWidth;
+		LayoutParams layoutScoreboard = scoreboard.getLayoutParams();
+		layoutScoreboard.width = (int)sWidth;
+		layoutScoreboard.height = (int)sWidth*1/3;
+		scoreboard.setLayoutParams(layoutScoreboard);
+		sMargin = (int)sWidth/1800 * 50;
+		RelativeLayout.LayoutParams layoutTop = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		layoutTop.setMargins(5, sMargin, 0, 0);
+		((MarginLayoutParams) layoutScoreboard).setMargins(0, 0, 0, 0);
+		battingOrderText.setLayoutParams(layoutTop);
+		scoreboard.setLayoutParams(layoutScoreboard);
+	}
 }

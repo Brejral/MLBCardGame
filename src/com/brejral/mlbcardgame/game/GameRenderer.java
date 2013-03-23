@@ -25,11 +25,14 @@ import com.brejral.mlbcardgame.common.TextureHelper;
 public class GameRenderer implements GLSurfaceView.Renderer 
 {	
 	/** Used for debug logs. */
+	@SuppressWarnings("unused")
 	private static final String TAG = "GameRenderer";
 
 	private final Context mActivityContext;
 	
-	private Game game; 
+	public Game game; 
+	
+	public float screenRatio;
 
 	/**
 	 * Store the model matrix. This matrix is used to move models from object space (where each model can be thought
@@ -86,6 +89,13 @@ public class GameRenderer implements GLSurfaceView.Renderer
 	/** This is a handle to our texture data. */
 	private int mBackgroundTextureDataHandle;
 	
+	public boolean pitcherZoomed, batterZoomed, runner1Zoomed, runner2Zoomed, runner3Zoomed;
+	
+	/** Variable for storing the current scale through the zoom.*/
+	public float zoomScaleX, zoomScaleY, zoomTranslate;
+	
+	/** Increment of x and y scale when zooming in and out for cards */
+	private final float zoomScaleSpeed = .01f;
 
 	/**
 	 * Initialize the model data.
@@ -208,7 +218,7 @@ public class GameRenderer implements GLSurfaceView.Renderer
 		// Position the eye in front of the origin.
 		final float eyeX = 0.0f;
 		final float eyeY = 0.0f;
-		final float eyeZ = 1.706666666667f;
+		final float eyeZ = screenRatio;
 
 		// We are looking toward the distance
 		final float lookX = 0.0f;
@@ -288,7 +298,7 @@ public class GameRenderer implements GLSurfaceView.Renderer
         drawImage();
         
         // Draw the pitcher card.
-        if (game.pitcher != null) {
+        if (game.pitcher != null && pitcherZoomed == false) {
 	        Matrix.setIdentityM(mModelMatrix, 0);
 	        Matrix.translateM(mModelMatrix, 0, 0f, -.1f, .01f);
 	        Matrix.scaleM(mModelMatrix, 0, 0.25f, 0.35f, 1.0f);
@@ -296,10 +306,26 @@ public class GameRenderer implements GLSurfaceView.Renderer
 	        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, game.pitcher.textureDataHandle);
 	        GLES20.glUniform1i(mTextureUniformHandle, 0);
 	        drawImage();
+        } else if (pitcherZoomed == true) {
+	        Matrix.setIdentityM(mModelMatrix, 0);
+	        Matrix.translateM(mModelMatrix, 0, zoomTranslate, -.1f, .02f);
+	        Matrix.scaleM(mModelMatrix, 0, zoomScaleX, zoomScaleY, 1.0f);
+	        GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+	        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, game.pitcher.textureDataHandle);
+	        GLES20.glUniform1i(mTextureUniformHandle, 0);
+	        drawImage();
+	        if (zoomScaleX >= 1f)
+	        	zoomScaleX = 1f;
+	        else
+	        	zoomScaleX += 5f*zoomScaleSpeed;
+	        if (zoomScaleY >= 1.4f)
+	        	zoomScaleY = 1.4f;
+	        else
+	        	zoomScaleY += 7f*zoomScaleSpeed;	        
         }
 
         // Draw the batter card.
-        if (game.batter != null) {
+        if (game.batter != null && batterZoomed == false) {
 	        Matrix.setIdentityM(mModelMatrix, 0);
 	        Matrix.translateM(mModelMatrix, 0, 0f, -0.95f, .01f);
 	        Matrix.scaleM(mModelMatrix, 0, 0.25f, 0.35f, 1.0f);
@@ -307,10 +333,30 @@ public class GameRenderer implements GLSurfaceView.Renderer
 	        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, game.batter.textureDataHandle);
 	        GLES20.glUniform1i(mTextureUniformHandle, 0);
 	        drawImage();
+        } else if (batterZoomed == true) {
+	        Matrix.setIdentityM(mModelMatrix, 0);
+	        Matrix.translateM(mModelMatrix, 0, 0f, zoomTranslate, .02f);
+	        Matrix.scaleM(mModelMatrix, 0, zoomScaleX, zoomScaleY, 1.0f);
+	        GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+	        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, game.batter.textureDataHandle);
+	        GLES20.glUniform1i(mTextureUniformHandle, 0);
+	        drawImage();
+	        if (zoomScaleX >= 1f)
+	        	zoomScaleX = 1f;
+	        else
+	        	zoomScaleX += 5f*zoomScaleSpeed;
+	        if (zoomScaleY >= 1.4f)
+	        	zoomScaleY = 1.4f;
+	        else
+	        	zoomScaleY += 7f*zoomScaleSpeed;
+	        if (zoomTranslate >= -.1f ) 
+	        	zoomTranslate = -.1f;
+	        else
+	        	zoomTranslate += 5f/.75f*.85f*zoomScaleSpeed;
         }
 
         // Draw the runner 1 card.
-        if (game.runner1 != null) {
+        if (game.runner1 != null && runner1Zoomed == false) {
 	        Matrix.setIdentityM(mModelMatrix, 0);
 	        Matrix.translateM(mModelMatrix, 0, .70f, -0.1f, .01f);
 	        Matrix.scaleM(mModelMatrix, 0, 0.25f, 0.35f, 1.0f);
@@ -318,10 +364,30 @@ public class GameRenderer implements GLSurfaceView.Renderer
 	        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, game.runner1.textureDataHandle);
 	        GLES20.glUniform1i(mTextureUniformHandle, 0);
 	        drawImage();
+        } else if (runner1Zoomed == true) {
+	        Matrix.setIdentityM(mModelMatrix, 0);
+	        Matrix.translateM(mModelMatrix, 0, zoomTranslate, -.1f, .02f);
+	        Matrix.scaleM(mModelMatrix, 0, zoomScaleX, zoomScaleY, 1.0f);
+	        GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+	        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, game.runner1.textureDataHandle);
+	        GLES20.glUniform1i(mTextureUniformHandle, 0);
+	        drawImage();
+	        if (zoomScaleX >= 1f)
+	        	zoomScaleX = 1f;
+	        else
+	        	zoomScaleX += 5f*zoomScaleSpeed;
+	        if (zoomScaleY >= 1.4f)
+	        	zoomScaleY = 1.4f;
+	        else
+	        	zoomScaleY += 7f*zoomScaleSpeed;
+	        if (zoomTranslate <= 0f ) 
+	        	zoomTranslate = 0f;
+	        else
+	        	zoomTranslate -= 5f/.75f*.7f*zoomScaleSpeed;
         }
 
         // Draw the runner 2 card.
-        if (game.runner2 != null) {
+        if (game.runner2 != null && runner2Zoomed == false) {
 	        Matrix.setIdentityM(mModelMatrix, 0);
 	        Matrix.translateM(mModelMatrix, 0, 0f, 0.75f, .01f);
 	        Matrix.scaleM(mModelMatrix, 0, 0.25f, 0.35f, 1.0f);
@@ -329,10 +395,30 @@ public class GameRenderer implements GLSurfaceView.Renderer
 	        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, game.runner2.textureDataHandle);
 	        GLES20.glUniform1i(mTextureUniformHandle, 0);
 	        drawImage();
+        } else if (runner2Zoomed == true) {
+	        Matrix.setIdentityM(mModelMatrix, 0);
+	        Matrix.translateM(mModelMatrix, 0, 0f, zoomTranslate, .02f);
+	        Matrix.scaleM(mModelMatrix, 0, zoomScaleX, zoomScaleY, 1.0f);
+	        GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+	        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, game.runner2.textureDataHandle);
+	        GLES20.glUniform1i(mTextureUniformHandle, 0);
+	        drawImage();
+	        if (zoomScaleX >= 1f)
+	        	zoomScaleX = 1f;
+	        else
+	        	zoomScaleX += 5f*zoomScaleSpeed;
+	        if (zoomScaleY >= 1.4f)
+	        	zoomScaleY = 1.4f;
+	        else
+	        	zoomScaleY += 7f*zoomScaleSpeed;
+	        if (zoomTranslate <= -.1f ) 
+	        	zoomTranslate = -.1f;
+	        else
+	        	zoomTranslate -= 5f/.75f*.85f*zoomScaleSpeed;
         }
 
         // Draw the runner 3 card.
-        if (game.runner3 != null) {
+        if (game.runner3 != null && runner3Zoomed == false) {
 	        Matrix.setIdentityM(mModelMatrix, 0);
 	        Matrix.translateM(mModelMatrix, 0, -.70f, -0.1f, .01f);
 	        Matrix.scaleM(mModelMatrix, 0, 0.25f, 0.35f, 1.0f);
@@ -340,6 +426,26 @@ public class GameRenderer implements GLSurfaceView.Renderer
 	        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, game.runner3.textureDataHandle);
 	        GLES20.glUniform1i(mTextureUniformHandle, 0);
 	        drawImage();
+        } else if (runner3Zoomed == true) {
+	        Matrix.setIdentityM(mModelMatrix, 0);
+	        Matrix.translateM(mModelMatrix, 0, zoomTranslate, -.1f, .02f);
+	        Matrix.scaleM(mModelMatrix, 0, zoomScaleX, zoomScaleY, 1.0f);
+	        GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+	        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, game.runner3.textureDataHandle);
+	        GLES20.glUniform1i(mTextureUniformHandle, 0);
+	        drawImage();
+	        if (zoomScaleX >= 1f)
+	        	zoomScaleX = 1f;
+	        else
+	        	zoomScaleX += 5f*zoomScaleSpeed;
+	        if (zoomScaleY >= 1.4f)
+	        	zoomScaleY = 1.4f;
+	        else
+	        	zoomScaleY += 7f*zoomScaleSpeed;
+	        if (zoomTranslate >= 0f ) 
+	        	zoomTranslate = 0f;
+	        else
+	        	zoomTranslate += 5f/.75f*.7f*zoomScaleSpeed;
         }
 
 	}
