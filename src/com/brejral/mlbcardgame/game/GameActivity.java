@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
@@ -28,10 +29,11 @@ public class GameActivity extends Activity {
 	public GameRenderer gameRenderer;
 	public static Game game;
 	public TextView resultText, battingOrderText;
-	public ImageView scoreboard;
+	public ImageView scoreboard, lineupBox;
 	public int pit;
 	public float sHeight, sWidth, sRatio;
-	public int sMargin;
+	public int sMargin, sLineupMargin;
+	public float backgroundRatio = 640f/375f;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -42,6 +44,7 @@ public class GameActivity extends Activity {
 		resultText = (TextView)findViewById(R.id.resultText);
 		battingOrderText = (TextView)findViewById(R.id.battingOrderText);
 		scoreboard = (ImageView)findViewById(R.id.scoreboard);
+		lineupBox = (ImageView)findViewById(R.id.lineupbox);
 		
 		gameView = (GameView)findViewById(R.id.gl_surface_view);
 		
@@ -54,7 +57,6 @@ public class GameActivity extends Activity {
 		if (supportsEs2)
 		{
 			gameView.setEGLContextClientVersion(2);
-
 			
 			gameRenderer = new GameRenderer(this, game);
 			gameView.setRenderer(gameRenderer, displayMetrics);
@@ -143,15 +145,24 @@ public class GameActivity extends Activity {
 		sHeight = displayMetrics.heightPixels;
 		sWidth = displayMetrics.widthPixels;
 		sRatio = sHeight/sWidth;
+		
 		LayoutParams layoutScoreboard = scoreboard.getLayoutParams();
+		LayoutParams layoutLineup = battingOrderText.getLayoutParams();
+		LayoutParams layoutLineupBox = lineupBox.getLayoutParams();
+
 		layoutScoreboard.width = (int)sWidth;
-		layoutScoreboard.height = (int)sWidth*1/3;
-		scoreboard.setLayoutParams(layoutScoreboard);
-		sMargin = (int)sWidth/1800 * 50;
-		RelativeLayout.LayoutParams layoutTop = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		layoutTop.setMargins(5, sMargin, 0, 0);
+		layoutScoreboard.height = (int)sWidth*240/1040;
+		layoutLineupBox.width = (int) (sWidth*.4f);
+		layoutLineupBox.height = (int) (600/720 * sWidth*.4f);
+		
+		sLineupMargin = (int) ((int)sWidth/1800f * 50f);
+		sMargin = (int) ((sHeight - backgroundRatio*sWidth)/2);
+		((MarginLayoutParams) layoutLineup).setMargins(5, 0, 0, 0);
 		((MarginLayoutParams) layoutScoreboard).setMargins(0, 0, 0, 0);
-		battingOrderText.setLayoutParams(layoutTop);
+		((MarginLayoutParams) layoutLineupBox).setMargins(0, 0, 0, 0);
+		
+		battingOrderText.setLayoutParams(layoutLineup);
 		scoreboard.setLayoutParams(layoutScoreboard);
+		lineupBox.setLayoutParams(layoutLineupBox);
 	}
 }
