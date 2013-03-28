@@ -21,6 +21,8 @@ public class Game {
 	public String result = "";
 	public int awayInningScores[] = new int[20];
 	public int homeInningScores[] = new int[20];
+	public int awayHits;
+	public int homeHits;
 	
 	public Game(Team home, Team away) {
 		homeTeam = home;
@@ -285,6 +287,7 @@ public class Game {
 	}
 	
 	public void singleHit() {
+		addHit();
 		result = "Single";
 		batter.gameStats[2]++;
 		pitcher.gameStats[2]++;
@@ -309,6 +312,7 @@ public class Game {
 	}
 	
 	public void doubleHit() {
+		addHit();
 		result = "Double";
 		batter.gameStats[2]++;
 		batter.gameStats[3]++;
@@ -337,6 +341,7 @@ public class Game {
 	}
 	
 	public void tripleHit() {
+		addHit();
 		result = "Triple";
 		batter.gameStats[2]++;
 		batter.gameStats[4]++;
@@ -367,6 +372,7 @@ public class Game {
 	}
 	
 	public void homeRunHit() {
+		addHit();
 		result = "Home Run";
 		batter.gameStats[2]++;
 		batter.gameStats[5]++;
@@ -452,5 +458,12 @@ public class Game {
 			}
 			updatePitcher();
 		}
+	}
+	
+	public void addHit() {
+		if (topOfInning)
+			awayHits++;
+		else
+			homeHits++;
 	}
 }

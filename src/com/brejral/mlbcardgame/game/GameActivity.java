@@ -358,10 +358,14 @@ public class GameActivity extends Activity {
 	public void updateScoreboard() {
 		homeRuns.setText(Integer.toString(game.homeScore));
 		awayRuns.setText(Integer.toString(game.awayScore));
+		homeHits.setText(Integer.toString(game.homeHits));
+		awayHits.setText(Integer.toString(game.awayHits));
 		
 		for (int i = 0; i < game.inning; i++) {
 			awayInningScore[i].setText(Integer.toString(game.awayInningScores[i]));
-			if (game.topOfInning == false && i != game.inning - 1)
+			if (i != game.inning - 1)
+				homeInningScore[i].setText(Integer.toString(game.homeInningScores[i]));
+			else if (game.topOfInning == false)
 				homeInningScore[i].setText(Integer.toString(game.homeInningScores[i]));				
 		}
 
