@@ -22,8 +22,226 @@
         android:layout_height="150dp"
         android:layout_alignBottom="@id/gl_surface_view"
         android:layout_alignLeft="@id/gl_surface_view"
-        android:src="@drawable/lineupbox" />
+        android:src="@drawable/lineupbox"
+        android:scaleType="fitXY" />
+    
+    <TextView
+        android:id="@+id/awayTeamName"
+        android:textColor="@android:color/white"
+        android:gravity="center_vertical|right"
+        android:textSize="20sp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        />
+    
+    <TextView
+        android:id="@+id/awayInning1"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        />
+    
+    <TextView
+        android:id="@+id/awayInning2"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        />
+    
+    <TextView
+        android:id="@+id/awayInning3"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        />
+    
+    <TextView
+        android:id="@+id/awayInning4"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        />
+        
+    <TextView
+        android:id="@+id/awayInning5"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        />
 
+    
+    <TextView
+        android:id="@+id/awayInning6"
+        android:textSize="20sp"
+        android:gravity="center_vertical|center_horizontal"
+        android:textColor="@android:color/white"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        />
+    
+    <TextView
+        android:id="@+id/awayInning7"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        />
+    
+    <TextView
+        android:id="@+id/awayInning8"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        />
+    
+    <TextView
+        android:id="@+id/awayInning9"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        />
+    
+    <TextView
+        android:id="@+id/awayRuns"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        />
+    
+    <TextView
+        android:id="@+id/awayHits"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        />
+
+    <TextView
+        android:id="@+id/homeTeamName"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:gravity="center_vertical|right"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        />
+    
+    <TextView
+        android:id="@+id/homeInning1"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        />
+    
+    <TextView
+        android:id="@+id/homeInning2"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        />
+    
+    <TextView
+        android:id="@+id/homeInning3"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        />
+    
+    <TextView
+        android:id="@+id/homeInning4"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        />
+        
+    <TextView
+        android:id="@+id/homeInning5"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        />
+
+    <TextView
+        android:id="@+id/homeInning6"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        />
+    
+    <TextView
+        android:id="@+id/homeInning7"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        />
+    
+    <TextView
+        android:id="@+id/homeInning8"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        />
+    
+    <TextView
+        android:id="@+id/homeInning9"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        />
+    
+    <TextView
+        android:id="@+id/homeRuns"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        />
+    
+    <TextView
+        android:id="@+id/homeHits"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        />
+    
     <TextView
         android:id="@+id/resultText"
         android:textColor="@android:color/white"

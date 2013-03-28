@@ -19,6 +19,8 @@ public class Game {
 	public int homeScore, awayScore;
 	public int runnerAdvance;
 	public String result = "";
+	public int awayInningScores[] = new int[20];
+	public int homeInningScores[] = new int[20];
 	
 	public Game(Team home, Team away) {
 		homeTeam = home;
@@ -398,10 +400,14 @@ public class Game {
 	}
 	
 	public void addRun() {
-		if (topOfInning) 
+		if (topOfInning) {
 			awayScore++;
-		else
+			awayInningScores[inning - 1]++; 
+		}
+		else {
 			homeScore++;
+			homeInningScores[inning - 1]++;
+		}
 	}
 	
 	public void advanceBatterNum() {
