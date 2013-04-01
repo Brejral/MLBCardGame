@@ -21,4 +21,6 @@
 	<string name="cpu">CPU</string>
 	<string name="user">User</string>
 	<string name="back">Back</string>
+	<string name="inning">Inning</string>
+	<string name="outs">Outs</string>
 </resources>

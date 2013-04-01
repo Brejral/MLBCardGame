@@ -25,6 +25,66 @@
         android:src="@drawable/lineupbox"
         android:scaleType="fitXY" />
     
+    <ImageView 
+        android:id="@+id/resultbox"
+        android:layout_width="150dp"
+        android:layout_height="100dp"
+        android:layout_below="@id/scoreboard"
+        android:layout_alignLeft="@id/gl_surface_view"
+        android:src="@drawable/box"
+        android:scaleType="fitXY"/>
+    
+    <TextView
+        android:id="@+id/inningtext"
+        android:text="@string/inning"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_alignTop="@id/resultbox"
+        android:layout_alignLeft="@id/resultbox"
+        android:textSize="20sp"
+        android:textColor="@android:color/white" />
+
+   <TextView
+        android:id="@+id/outstext"
+        android:text="@string/outs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_alignTop="@id/resultbox"
+        android:layout_alignLeft="@id/resultbox"
+        android:textSize="20sp"
+        android:textColor="@android:color/white" />
+    
+    <TextView
+        android:id="@+id/inning"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_alignTop="@id/resultbox"
+        android:layout_alignLeft="@id/resultbox"
+        android:textSize="20sp"
+        android:textColor="@android:color/white" />
+
+   <TextView
+        android:id="@+id/outs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_alignTop="@id/resultbox"
+        android:layout_alignLeft="@id/resultbox"
+        android:textSize="20sp"
+        android:textColor="@android:color/white" />
+   
+    <ImageView 
+        android:id="@+id/currentbatterbox"
+        android:layout_width="150dp"
+        android:layout_height="100dp"
+        android:layout_below="@id/scoreboard"
+        android:layout_alignRight="@id/gl_surface_view"
+        android:src="@drawable/box"
+        android:scaleType="fitXY"/>
+    
     <TextView
         android:id="@+id/awayTeamName"
         android:textColor="@android:color/white"
@@ -249,8 +309,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_alignBottom="@id/gl_surface_view"
-        android:layout_marginBottom="200dp" />
+        android:gravity="center_horizontal"
+        android:layout_alignTop="@id/resultbox"
+        android:layout_alignLeft="@id/resultbox" />
     
     <TextView 
         android:id="@+id/battingOrderText"
@@ -264,14 +325,14 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp" />
             
-        <LinearLayout 
-            android:id="@+id/pitchButtons"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:orientation="vertical">
-            
-        </LinearLayout>
+    <LinearLayout 
+        android:id="@+id/pitchButtons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical" 
+        >
+    </LinearLayout>
         
 </RelativeLayout>

@@ -17,7 +17,6 @@ import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.brejral.mlbcardgame.R;
@@ -28,10 +27,10 @@ public class GameActivity extends Activity {
 	private GameView gameView;
 	public GameRenderer gameRenderer;
 	public static Game game;
-	public TextView resultText, battingOrderText;
+	public TextView resultText, battingOrderText, inning, outs, inningText, outsText;
 	public TextView awayTeamText, awayRuns, awayHits, awayInningScore[];
 	public TextView homeTeamText, homeRuns, homeHits, homeInningScore[];
-	public ImageView scoreboard, lineupBox;
+	public ImageView scoreboard, lineupBox, batterBox, resultBox;
 	public int pit;
 	public float sHeight, sWidth, sRatio;
 	public int sMargin, sLineupMargin;
@@ -74,6 +73,12 @@ public class GameActivity extends Activity {
 		homeInningScore[8] = (TextView)findViewById(R.id.homeInning9);
 		homeRuns = (TextView)findViewById(R.id.homeRuns);
 		homeHits = (TextView)findViewById(R.id.homeHits);
+		batterBox = (ImageView)findViewById(R.id.currentbatterbox);
+		resultBox = (ImageView)findViewById(R.id.resultbox);
+		inningText = (TextView)findViewById(R.id.inningtext);
+		outsText = (TextView)findViewById(R.id.outstext);
+		inning = (TextView)findViewById(R.id.inning);
+		outs = (TextView)findViewById(R.id.outs);
 		
 		gameView = (GameView)findViewById(R.id.gl_surface_view);
 		
@@ -96,6 +101,7 @@ public class GameActivity extends Activity {
 		setLayoutParameters();			
 		setPitchButtons();
 		setBoxScoreTextBoxes();
+		updateScoreboard();
 		updateView();
 	}
 	
@@ -116,7 +122,7 @@ public class GameActivity extends Activity {
 	public void setPitchButtons() {
 		LinearLayout pitchButtons = (LinearLayout)findViewById(R.id.pitchButtons);
 		LayoutParams layoutBottom = pitchButtons.getLayoutParams();
-		((MarginLayoutParams) layoutBottom).setMargins(0, 0, 0, sMargin);
+		((MarginLayoutParams) layoutBottom).setMargins(0, 0, 0, 0);
 		pitchButtons.setLayoutParams(layoutBottom);
 		for(int i = 0; i < game.pitcher.pitches.length; i++) {
 			Button btnTag = new Button(this);
@@ -183,21 +189,51 @@ public class GameActivity extends Activity {
 		LayoutParams layoutScoreboard = scoreboard.getLayoutParams();
 		LayoutParams layoutLineup = battingOrderText.getLayoutParams();
 		LayoutParams layoutLineupBox = lineupBox.getLayoutParams();
+		LayoutParams layoutBatterBox = batterBox.getLayoutParams();
+		LayoutParams layoutResultBox = resultBox.getLayoutParams();
+		LayoutParams layoutInningText = inningText.getLayoutParams();
+		LayoutParams layoutOutsText = outsText.getLayoutParams();
+		LayoutParams layoutInning = inning.getLayoutParams();
+		LayoutParams layoutOuts = outs.getLayoutParams();
+		LayoutParams layoutResultText = resultText.getLayoutParams();
 
 		layoutScoreboard.width = (int)sWidth;
 		layoutScoreboard.height = (int)sWidth*240/1040;
 		layoutLineupBox.width = (int) (sWidth*.36f);
 		layoutLineupBox.height = (int) (600f/720f * sWidth*.4f);
+		layoutResultBox.width = (int) (sWidth*.36f);
+		layoutResultBox.height = (int) (sHeight*.15f);
+		layoutBatterBox.width = (int) (sWidth*.36f);
+		layoutBatterBox.height = (int) (sHeight*.15f);
+		layoutOuts.width = outsText.getMeasuredWidth();
+		Log.d(TAG, Integer.toString(outsText.getMeasuredWidth()));
+		Log.d(TAG, Integer.toString(inningText.getMeasuredWidth()));
+		layoutInning.width = inningText.getMeasuredWidth();
 		
 		sLineupMargin = (int) ((int)sWidth/1800f * 50f);
 		sMargin = (int) ((sHeight - backgroundRatio*sWidth)/2);
 		((MarginLayoutParams) layoutLineup).setMargins(5, 0, 0, 2);
 		((MarginLayoutParams) layoutScoreboard).setMargins(0, 0, 0, 0);
 		((MarginLayoutParams) layoutLineupBox).setMargins(0, 0, 0, 0);
+		((MarginLayoutParams) layoutInningText).setMargins((int)(layoutBatterBox.width/720f*10f), (int)(layoutBatterBox.height/600f*5f),0,0);
+		((MarginLayoutParams) layoutInning).setMargins((int)(layoutBatterBox.width/720f*100f), (int)(layoutBatterBox.height/600f*120f),0,0);
+		((MarginLayoutParams) layoutOutsText).setMargins((int)(layoutBatterBox.width/720f*500f), (int)(layoutBatterBox.height/600f*5f),0,0);
+		((MarginLayoutParams) layoutOuts).setMargins((int)(layoutBatterBox.width/720f*580f), (int)(layoutBatterBox.height/600f*120f),0,0);
+		((MarginLayoutParams) layoutResultText).setMargins((int)(layoutBatterBox.width/720f*10f), (int)(layoutBatterBox.height/600f*400f),0,0);
+		
 		
 		battingOrderText.setLayoutParams(layoutLineup);
 		scoreboard.setLayoutParams(layoutScoreboard);
 		lineupBox.setLayoutParams(layoutLineupBox);
+		batterBox.setLayoutParams(layoutBatterBox);
+		resultBox.setLayoutParams(layoutResultBox);
+		outsText.setLayoutParams(layoutOutsText);
+		inningText.setLayoutParams(layoutInningText);
+		outs.setLayoutParams(layoutOuts);
+		inning.setLayoutParams(layoutInning);
+		resultText.setLayoutParams(layoutResultText);
+		Log.d(TAG, Integer.toString(outsText.getMeasuredWidth()));
+		Log.d(TAG, Integer.toString(inningText.getMeasuredWidth()));
 	}
 	
 	public void setBoxScoreTextBoxes() {
@@ -356,6 +392,8 @@ public class GameActivity extends Activity {
 	}
 	
 	public void updateScoreboard() {
+		inning.setText(Integer.toString(game.inning));
+		outs.setText(Integer.toString(game.outs));
 		homeRuns.setText(Integer.toString(game.homeScore));
 		awayRuns.setText(Integer.toString(game.awayScore));
 		homeHits.setText(Integer.toString(game.homeHits));
