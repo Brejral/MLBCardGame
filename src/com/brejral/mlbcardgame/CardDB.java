@@ -7,6 +7,7 @@ public class CardDB {
 		switch (card.id) {
 		case 13001:
 			card.name = "Alex Avila";
+			card.lastName = "Avila";
 			card.imageId = R.drawable.alex_avila;
 			card._c = true;
 			card.batsL = true;
@@ -42,6 +43,7 @@ public class CardDB {
 			break;
 		case 13002:
 			card.name = "Andy Dirks";
+			card.lastName = "Dirks";
 			card.imageId = R.drawable.andy_dirks;
 			card._lf = true;
 			card.batsL = true;
@@ -77,6 +79,7 @@ public class CardDB {
 			break;
 		case 13003:
 			card.name = "Angel Pagan";
+			card.lastName = "Pagan";
 			card.imageId = R.drawable.angel_pagan;
 			card._cf = true;
 			card.batsS = true;
@@ -112,6 +115,7 @@ public class CardDB {
 			break;
 		case 13004:
 			card.name = "Austin Jackson";
+			card.lastName = "Jackson";
 			card.imageId = R.drawable.austin_jackson;
 			card._cf = true;
 			card.batsR = true;
@@ -147,6 +151,7 @@ public class CardDB {
 			break;
 		case 13005:
 			card.name = "Brandon Belt";
+			card.lastName = "Belt";
 			card.imageId = R.drawable.brandon_belt;
 			card._1b = true;
 			card._lf = true;
@@ -183,6 +188,7 @@ public class CardDB {
 			break;
 		case 13006:
 			card.name = "Brandon Crawford";
+			card.lastName = "Crawford";
 			card.imageId = R.drawable.brandon_crawford;
 			card._ss = true;
 			card.batsL = true;
@@ -218,6 +224,7 @@ public class CardDB {
 			break;
 		case 13007:
 			card.name = "Buster Posey";
+			card.lastName = "Posey";
 			card.imageId = R.drawable.buster_posey;
 			card._c = true;
 			card._1b = true;
@@ -254,6 +261,7 @@ public class CardDB {
 			break;
 		case 13008:
 			card.name = "Gregor Blanco";
+			card.lastName = "Blanco";
 			card.imageId = R.drawable.gregor_blanco;
 			card._lf = true;
 			card._cf = true;
@@ -291,6 +299,7 @@ public class CardDB {
 			break;
 		case 13009:
 			card.name = "Hunter Pence";
+			card.lastName = "Pence";
 			card.imageId = R.drawable.hunter_pence;
 			card._rf = true;
 			card.batsR = true;
@@ -326,6 +335,7 @@ public class CardDB {
 			break;
 		case 13010:
 			card.name = "Jhonny Peralta";
+			card.lastName = "Peralta";
 			card.imageId = R.drawable.jhonny_peralta;
 			card._ss = true;
 			card.batsR = true;
@@ -361,6 +371,7 @@ public class CardDB {
 			break;
 		case 13011:
 			card.name = "Joaquin Arias";
+			card.lastName = "Arias";
 			card.imageId = R.drawable.joaquin_arias;
 			card._ss = true;
 			card._2b = true;
@@ -398,6 +409,7 @@ public class CardDB {
 			break;
 		case 13012:
 			card.name = "Justin Verlander";
+			card.lastName = "Verlander";
 			card.imageId = R.drawable.justin_verlander;
 			card._sp = true;
 			card.throwsR = true;
@@ -435,6 +447,7 @@ public class CardDB {
 			break;
 		case 13013:
 			card.name = "Marco Scutaro";
+			card.lastName = "Scutaro";
 			card.imageId = R.drawable.marco_scutaro;
 			card._2b = true;
 			card._3b = true;
@@ -472,6 +485,7 @@ public class CardDB {
 			break;
 		case 13014:
 			card.name = "Matt Cain";
+			card.lastName = "Cain";
 			card.imageId = R.drawable.matt_cain;
 			card._sp = true;
 			card.throwsR = true;
@@ -509,6 +523,7 @@ public class CardDB {
 			break;
 		case 13015:
 			card.name = "Miguel Cabrera";
+			card.lastName = "Cabrera";
 			card.imageId = R.drawable.miguel_cabrera;
 			card._3b = true;
 			card._1b = true;
@@ -545,6 +560,7 @@ public class CardDB {
 			break;
 		case 13016:
 			card.name = "Omar Infante";
+			card.lastName = "Infante";
 			card.imageId = R.drawable.omar_infante;
 			card._2b = true;
 			card.batsR = true;
@@ -580,6 +596,7 @@ public class CardDB {
 			break;
 		case 13017:
 			card.name = "Pablo Sandoval";
+			card.lastName = "Sandoval";
 			card.imageId = R.drawable.pablo_sandoval;
 			card._3b = true;
 			card.stats12L[0] = 137;
@@ -614,6 +631,7 @@ public class CardDB {
 			break;
 		case 13018:
 			card.name = "Prince Fielder";
+			card.lastName = "Fielder";
 			card.imageId = R.drawable.prince_fielder;
 			card._1b = true;
 			card.batsL = true;
@@ -649,6 +667,7 @@ public class CardDB {
 			break;
 		case 13019:
 			card.name = "Torii Hunter";
+			card.lastName = "Hunter";
 			card.imageId = R.drawable.torii_hunter;
 			card._rf = true;
 			card.batsR = true;
@@ -684,6 +703,7 @@ public class CardDB {
 			break;
 		case 13020:
 			card.name = "Victor Martinez";
+			card.lastName = "Martinez";
 			card.imageId = R.drawable.victor_martinez;
 			card._c = true;
 			card.batsS = true;
@@ -718,6 +738,7 @@ public class CardDB {
 			card.pitchType[6] = 10;
 			break;
 /*		default:
+			card.lastName = "";
 			card.stats12L[0] = ;
 			card.stats12L[1] = ;
 			card.stats12L[2] = ;

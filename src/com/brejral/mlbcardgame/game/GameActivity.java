@@ -3,6 +3,7 @@ package com.brejral.mlbcardgame.game;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ConfigurationInfo;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -19,7 +20,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.brejral.mlbcardgame.MainMenu;
 import com.brejral.mlbcardgame.R;
+import com.brejral.mlbcardgame.exhibition.ExhibitionMenu;
 
 public class GameActivity extends Activity {
 	@SuppressWarnings("unused")
@@ -27,10 +30,10 @@ public class GameActivity extends Activity {
 	private GameView gameView;
 	public GameRenderer gameRenderer;
 	public static Game game;
-	public TextView resultText, battingOrderText, inning, outs, inningText, outsText;
-	public TextView awayTeamText, awayRuns, awayHits, awayInningScore[];
-	public TextView homeTeamText, homeRuns, homeHits, homeInningScore[];
-	public ImageView scoreboard, lineupBox, batterBox, resultBox;
+	public TextView resultText, battingOrderText, inning, outs;
+	public TextView awayTeamText, awayRuns;
+	public TextView homeTeamText, homeRuns;
+	public ImageView scoreboard, lineupBox, resultBox;
 	public int pit;
 	public float sHeight, sWidth, sRatio;
 	public int sMargin, sLineupMargin;
@@ -40,43 +43,17 @@ public class GameActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		awayInningScore = new TextView[9];
-		homeInningScore = new TextView[9];
-		
 		setContentView(R.layout.game);
 
 		resultText = (TextView)findViewById(R.id.resultText);
 		battingOrderText = (TextView)findViewById(R.id.battingOrderText);
 		scoreboard = (ImageView)findViewById(R.id.scoreboard);
 		lineupBox = (ImageView)findViewById(R.id.lineupbox);
-		awayTeamText = (TextView)findViewById(R.id.awayTeamName);
-		homeTeamText = (TextView)findViewById(R.id.homeTeamName);
-		awayInningScore[0] = (TextView)findViewById(R.id.awayInning1);
-		awayInningScore[1] = (TextView)findViewById(R.id.awayInning2);
-		awayInningScore[2] = (TextView)findViewById(R.id.awayInning3);
-		awayInningScore[3] = (TextView)findViewById(R.id.awayInning4);
-		awayInningScore[4] = (TextView)findViewById(R.id.awayInning5);
-		awayInningScore[5] = (TextView)findViewById(R.id.awayInning6);
-		awayInningScore[6] = (TextView)findViewById(R.id.awayInning7);
-		awayInningScore[7] = (TextView)findViewById(R.id.awayInning8);
-		awayInningScore[8] = (TextView)findViewById(R.id.awayInning9);
+		awayTeamText = (TextView)findViewById(R.id.awayTeamAbreviation);
+		homeTeamText = (TextView)findViewById(R.id.homeTeamAbreviation);
 		awayRuns = (TextView)findViewById(R.id.awayRuns);
-		awayHits = (TextView)findViewById(R.id.awayHits);
-		homeInningScore[0] = (TextView)findViewById(R.id.homeInning1);
-		homeInningScore[1] = (TextView)findViewById(R.id.homeInning2);
-		homeInningScore[2] = (TextView)findViewById(R.id.homeInning3);
-		homeInningScore[3] = (TextView)findViewById(R.id.homeInning4);
-		homeInningScore[4] = (TextView)findViewById(R.id.homeInning5);
-		homeInningScore[5] = (TextView)findViewById(R.id.homeInning6);
-		homeInningScore[6] = (TextView)findViewById(R.id.homeInning7);
-		homeInningScore[7] = (TextView)findViewById(R.id.homeInning8);
-		homeInningScore[8] = (TextView)findViewById(R.id.homeInning9);
 		homeRuns = (TextView)findViewById(R.id.homeRuns);
-		homeHits = (TextView)findViewById(R.id.homeHits);
-		batterBox = (ImageView)findViewById(R.id.currentbatterbox);
 		resultBox = (ImageView)findViewById(R.id.resultbox);
-		inningText = (TextView)findViewById(R.id.inningtext);
-		outsText = (TextView)findViewById(R.id.outstext);
 		inning = (TextView)findViewById(R.id.inning);
 		outs = (TextView)findViewById(R.id.outs);
 		
@@ -98,9 +75,10 @@ public class GameActivity extends Activity {
 		else {
 			return;
 		}
+		awayTeamText.setText(game.awayTeam.teamAbrev);
+		homeTeamText.setText(game.homeTeam.teamAbrev);
 		setLayoutParameters();			
 		setPitchButtons();
-		setBoxScoreTextBoxes();
 		updateScoreboard();
 		updateView();
 	}
@@ -135,6 +113,7 @@ public class GameActivity extends Activity {
 				@Override
 				public void onClick(View v) {
 					game.pitch(p);
+					checkEndOfGame();
 					updateView();
 					updateScoreboard();
 				}
@@ -189,223 +168,74 @@ public class GameActivity extends Activity {
 		LayoutParams layoutScoreboard = scoreboard.getLayoutParams();
 		LayoutParams layoutLineup = battingOrderText.getLayoutParams();
 		LayoutParams layoutLineupBox = lineupBox.getLayoutParams();
-		LayoutParams layoutBatterBox = batterBox.getLayoutParams();
 		LayoutParams layoutResultBox = resultBox.getLayoutParams();
-		LayoutParams layoutInningText = inningText.getLayoutParams();
-		LayoutParams layoutOutsText = outsText.getLayoutParams();
 		LayoutParams layoutInning = inning.getLayoutParams();
 		LayoutParams layoutOuts = outs.getLayoutParams();
 		LayoutParams layoutResultText = resultText.getLayoutParams();
+		LayoutParams layoutAwayTeamText = awayTeamText.getLayoutParams();
+		LayoutParams layoutHomeTeamText = homeTeamText.getLayoutParams();
+		LayoutParams layoutAwayScore = awayRuns.getLayoutParams();
+		LayoutParams layoutHomeScore = homeRuns.getLayoutParams();
 
-		layoutScoreboard.width = (int)sWidth;
-		layoutScoreboard.height = (int)sWidth*240/1040;
+		layoutScoreboard.width = (int) ((int)sWidth*.4f);
+		layoutScoreboard.height = (int) ((int)sWidth*.4f*600f/900f);
+		layoutInning.width = (int) (layoutScoreboard.width/900f*240f);
+		layoutInning.height = (int) (layoutScoreboard.height/600f*255f);
+		layoutOuts.width = (int) (layoutScoreboard.width/900f*100f);
+		layoutOuts.height = (int) (layoutScoreboard.height/600f*140f);
+		layoutAwayScore.width = (int) (layoutScoreboard.width/900f*190f);
+		layoutAwayScore.height = (int) (layoutScoreboard.height/600f*207f);
+		layoutHomeScore.width = (int) (layoutScoreboard.width/900f*190f);
+		layoutHomeScore.height = (int) (layoutScoreboard.height/600f*207f);
+		layoutAwayTeamText.width = (int) (layoutScoreboard.width/900f*440f);
+		layoutAwayTeamText.height = (int) (layoutScoreboard.height/600f*207f);
+		layoutHomeTeamText.width = (int) (layoutScoreboard.width/900f*440f);
+		layoutHomeTeamText.height = (int) (layoutScoreboard.height/600f*207f);
 		layoutLineupBox.width = (int) (sWidth*.36f);
 		layoutLineupBox.height = (int) (600f/720f * sWidth*.4f);
-		layoutResultBox.width = (int) (sWidth*.36f);
-		layoutResultBox.height = (int) (sHeight*.15f);
-		layoutBatterBox.width = (int) (sWidth*.36f);
-		layoutBatterBox.height = (int) (sHeight*.15f);
-		layoutOuts.width = outsText.getMeasuredWidth();
-		Log.d(TAG, Integer.toString(outsText.getMeasuredWidth()));
-		Log.d(TAG, Integer.toString(inningText.getMeasuredWidth()));
-		layoutInning.width = inningText.getMeasuredWidth();
+		layoutResultBox.width = (int) (sWidth - layoutScoreboard.width);
+		layoutResultBox.height = (int) (layoutScoreboard.height);
 		
 		sLineupMargin = (int) ((int)sWidth/1800f * 50f);
 		sMargin = (int) ((sHeight - backgroundRatio*sWidth)/2);
 		((MarginLayoutParams) layoutLineup).setMargins(5, 0, 0, 2);
 		((MarginLayoutParams) layoutScoreboard).setMargins(0, 0, 0, 0);
 		((MarginLayoutParams) layoutLineupBox).setMargins(0, 0, 0, 0);
-		((MarginLayoutParams) layoutInningText).setMargins((int)(layoutBatterBox.width/720f*10f), (int)(layoutBatterBox.height/600f*5f),0,0);
-		((MarginLayoutParams) layoutInning).setMargins((int)(layoutBatterBox.width/720f*100f), (int)(layoutBatterBox.height/600f*120f),0,0);
-		((MarginLayoutParams) layoutOutsText).setMargins((int)(layoutBatterBox.width/720f*500f), (int)(layoutBatterBox.height/600f*5f),0,0);
-		((MarginLayoutParams) layoutOuts).setMargins((int)(layoutBatterBox.width/720f*580f), (int)(layoutBatterBox.height/600f*120f),0,0);
-		((MarginLayoutParams) layoutResultText).setMargins((int)(layoutBatterBox.width/720f*10f), (int)(layoutBatterBox.height/600f*400f),0,0);
+		((MarginLayoutParams) layoutResultText).setMargins(5, 5, 0, 0);
+		((MarginLayoutParams) layoutInning).setMargins((int)(layoutScoreboard.width/900f*655f), (int)(layoutScoreboard.height/600f*235f),0,0);
+		((MarginLayoutParams) layoutOuts).setMargins((int)(layoutScoreboard.width/900f*555f), (int)(layoutScoreboard.height/600f*5f),0,0);
+		((MarginLayoutParams) layoutAwayTeamText).setMargins((int)(layoutScoreboard.width/900f*5f), (int)(layoutScoreboard.height/600f*155f),0,0);
+		((MarginLayoutParams) layoutHomeTeamText).setMargins((int)(layoutScoreboard.width/900f*5f), (int)(layoutScoreboard.height/600f*380f),0,0);
+		((MarginLayoutParams) layoutAwayScore).setMargins((int)(layoutScoreboard.width/900f*455f), (int)(layoutScoreboard.height/600f*155f),0,0);
+		((MarginLayoutParams) layoutHomeScore).setMargins((int)(layoutScoreboard.width/900f*455f), (int)(layoutScoreboard.height/600f*380f),0,0);
 		
 		
 		battingOrderText.setLayoutParams(layoutLineup);
 		scoreboard.setLayoutParams(layoutScoreboard);
 		lineupBox.setLayoutParams(layoutLineupBox);
-		batterBox.setLayoutParams(layoutBatterBox);
 		resultBox.setLayoutParams(layoutResultBox);
-		outsText.setLayoutParams(layoutOutsText);
-		inningText.setLayoutParams(layoutInningText);
 		outs.setLayoutParams(layoutOuts);
 		inning.setLayoutParams(layoutInning);
 		resultText.setLayoutParams(layoutResultText);
-		Log.d(TAG, Integer.toString(outsText.getMeasuredWidth()));
-		Log.d(TAG, Integer.toString(inningText.getMeasuredWidth()));
 	}
 	
-	public void setBoxScoreTextBoxes() {
-		float ratio = sWidth/1080;
-		
-		LayoutParams layoutParams = awayTeamText.getLayoutParams();
-		layoutParams.width = (int) (ratio*350);
-		layoutParams.height = (int) (ratio*70);
-		((MarginLayoutParams) layoutParams).setMargins((int)(5*ratio), (int)(84*ratio), 0, 0);
-		awayTeamText.setLayoutParams(layoutParams);
-		awayTeamText.setText(game.awayTeam.teamNickname);
-
-		layoutParams = homeTeamText.getLayoutParams();
-		layoutParams.width = (int) (ratio*350);
-		layoutParams.height = (int) (ratio*70);
-		((MarginLayoutParams) layoutParams).setMargins((int)(5*ratio), (int)(164*ratio), 0, 0);
-		homeTeamText.setLayoutParams(layoutParams);
-		homeTeamText.setText(game.homeTeam.teamNickname);
-		
-		layoutParams = awayInningScore[0].getLayoutParams();
-		layoutParams.width = (int) (ratio*55);
-		layoutParams.height = (int) (ratio*70);
-		((MarginLayoutParams) layoutParams).setMargins((int)(365*ratio), (int)(84*ratio), 0, 0);
-		awayInningScore[0].setLayoutParams(layoutParams);
-		awayInningScore[0].setText("0");
-		
-		layoutParams = awayInningScore[1].getLayoutParams();
-		layoutParams.width = (int) (ratio*55);
-		layoutParams.height = (int) (ratio*70);
-		((MarginLayoutParams) layoutParams).setMargins((int)(430*ratio), (int)(84*ratio), 0, 0);
-		awayInningScore[1].setLayoutParams(layoutParams);
-
-		layoutParams = awayInningScore[2].getLayoutParams();
-		layoutParams.width = (int) (ratio*55);
-		layoutParams.height = (int) (ratio*70);
-		((MarginLayoutParams) layoutParams).setMargins((int)(495*ratio), (int)(84*ratio), 0, 0);
-		awayInningScore[2].setLayoutParams(layoutParams);
-
-		layoutParams = awayInningScore[3].getLayoutParams();
-		layoutParams.width = (int) (ratio*55);
-		layoutParams.height = (int) (ratio*70);
-		((MarginLayoutParams) layoutParams).setMargins((int)(560*ratio), (int)(84*ratio), 0, 0);
-		awayInningScore[3].setLayoutParams(layoutParams);
-
-		layoutParams = awayInningScore[4].getLayoutParams();
-		layoutParams.width = (int) (ratio*55);
-		layoutParams.height = (int) (ratio*70);
-		((MarginLayoutParams) layoutParams).setMargins((int)(625*ratio), (int)(84*ratio), 0, 0);
-		awayInningScore[4].setLayoutParams(layoutParams);
-
-		layoutParams = awayInningScore[5].getLayoutParams();
-		layoutParams.width = (int) (ratio*55);
-		layoutParams.height = (int) (ratio*70);
-		((MarginLayoutParams) layoutParams).setMargins((int)(690*ratio), (int)(84*ratio), 0, 0);
-		awayInningScore[5].setLayoutParams(layoutParams);
-
-		layoutParams = awayInningScore[6].getLayoutParams();
-		layoutParams.width = (int) (ratio*55);
-		layoutParams.height = (int) (ratio*70);
-		((MarginLayoutParams) layoutParams).setMargins((int)(755*ratio), (int)(84*ratio), 0, 0);
-		awayInningScore[6].setLayoutParams(layoutParams);
-
-		layoutParams = awayInningScore[7].getLayoutParams();
-		layoutParams.width = (int) (ratio*55);
-		layoutParams.height = (int) (ratio*70);
-		((MarginLayoutParams) layoutParams).setMargins((int)(820*ratio), (int)(84*ratio), 0, 0);
-		awayInningScore[7].setLayoutParams(layoutParams);
-		
-		layoutParams = awayInningScore[8].getLayoutParams();
-		layoutParams.width = (int) (ratio*55);
-		layoutParams.height = (int) (ratio*70);
-		((MarginLayoutParams) layoutParams).setMargins((int)(885*ratio), (int)(84*ratio), 0, 0);
-		awayInningScore[8].setLayoutParams(layoutParams);
-
-		layoutParams = awayRuns.getLayoutParams();
-		layoutParams.width = (int) (ratio*55);
-		layoutParams.height = (int) (ratio*70);
-		((MarginLayoutParams) layoutParams).setMargins((int)(956*ratio), (int)(84*ratio), 0, 0);
-		awayRuns.setLayoutParams(layoutParams);
-		awayRuns.setText("0");
-
-		layoutParams = awayHits.getLayoutParams();
-		layoutParams.width = (int) (ratio*55);
-		layoutParams.height = (int) (ratio*70);
-		((MarginLayoutParams) layoutParams).setMargins((int)(1018*ratio), (int)(84*ratio), 0, 0);
-		awayHits.setLayoutParams(layoutParams);
-		awayHits.setText("0");
-
-		layoutParams = homeInningScore[0].getLayoutParams();
-		layoutParams.width = (int) (ratio*55);
-		layoutParams.height = (int) (ratio*70);
-		((MarginLayoutParams) layoutParams).setMargins((int)(365*ratio), (int)(164*ratio), 0, 0);
-		homeInningScore[0].setLayoutParams(layoutParams);
-		
-		layoutParams = homeInningScore[1].getLayoutParams();
-		layoutParams.width = (int) (ratio*55);
-		layoutParams.height = (int) (ratio*70);
-		((MarginLayoutParams) layoutParams).setMargins((int)(430*ratio), (int)(164*ratio), 0, 0);
-		homeInningScore[1].setLayoutParams(layoutParams);
-
-		layoutParams = homeInningScore[2].getLayoutParams();
-		layoutParams.width = (int) (ratio*55);
-		layoutParams.height = (int) (ratio*70);
-		((MarginLayoutParams) layoutParams).setMargins((int)(495*ratio), (int)(164*ratio), 0, 0);
-		homeInningScore[2].setLayoutParams(layoutParams);
-
-		layoutParams = homeInningScore[3].getLayoutParams();
-		layoutParams.width = (int) (ratio*55);
-		layoutParams.height = (int) (ratio*70);
-		((MarginLayoutParams) layoutParams).setMargins((int)(560*ratio), (int)(164*ratio), 0, 0);
-		homeInningScore[3].setLayoutParams(layoutParams);
-
-		layoutParams = homeInningScore[4].getLayoutParams();
-		layoutParams.width = (int) (ratio*55);
-		layoutParams.height = (int) (ratio*70);
-		((MarginLayoutParams) layoutParams).setMargins((int)(625*ratio), (int)(164*ratio), 0, 0);
-		homeInningScore[4].setLayoutParams(layoutParams);
-
-		layoutParams = homeInningScore[5].getLayoutParams();
-		layoutParams.width = (int) (ratio*55);
-		layoutParams.height = (int) (ratio*70);
-		((MarginLayoutParams) layoutParams).setMargins((int)(690*ratio), (int)(164*ratio), 0, 0);
-		homeInningScore[5].setLayoutParams(layoutParams);
-
-		layoutParams = homeInningScore[6].getLayoutParams();
-		layoutParams.width = (int) (ratio*55);
-		layoutParams.height = (int) (ratio*70);
-		((MarginLayoutParams) layoutParams).setMargins((int)(755*ratio), (int)(164*ratio), 0, 0);
-		homeInningScore[6].setLayoutParams(layoutParams);
-
-		layoutParams = homeInningScore[7].getLayoutParams();
-		layoutParams.width = (int) (ratio*55);
-		layoutParams.height = (int) (ratio*70);
-		((MarginLayoutParams) layoutParams).setMargins((int)(820*ratio), (int)(164*ratio), 0, 0);
-		homeInningScore[7].setLayoutParams(layoutParams);
-		
-		layoutParams = homeInningScore[8].getLayoutParams();
-		layoutParams.width = (int) (ratio*55);
-		layoutParams.height = (int) (ratio*70);
-		((MarginLayoutParams) layoutParams).setMargins((int)(885*ratio), (int)(164*ratio), 0, 0);
-		homeInningScore[8].setLayoutParams(layoutParams);
-
-		layoutParams = homeRuns.getLayoutParams();
-		layoutParams.width = (int) (ratio*55);
-		layoutParams.height = (int) (ratio*70);
-		((MarginLayoutParams) layoutParams).setMargins((int)(956*ratio), (int)(164*ratio), 0, 0);
-		homeRuns.setLayoutParams(layoutParams);
-		homeRuns.setText("0");
-
-		layoutParams = homeHits.getLayoutParams();
-		layoutParams.width = (int) (ratio*55);
-		layoutParams.height = (int) (ratio*70);
-		((MarginLayoutParams) layoutParams).setMargins((int)(1018*ratio), (int)(164*ratio), 0, 0);
-		homeHits.setLayoutParams(layoutParams);
-		homeHits.setText("0");
-	}
 	
 	public void updateScoreboard() {
+		if (game.topOfInning)
+			scoreboard.setImageResource(R.drawable.miniscoreboardtop);
+		else
+			scoreboard.setImageResource(R.drawable.miniscoreboardbottom);
 		inning.setText(Integer.toString(game.inning));
 		outs.setText(Integer.toString(game.outs));
 		homeRuns.setText(Integer.toString(game.homeScore));
 		awayRuns.setText(Integer.toString(game.awayScore));
-		homeHits.setText(Integer.toString(game.homeHits));
-		awayHits.setText(Integer.toString(game.awayHits));
-		
-		for (int i = 0; i < game.inning; i++) {
-			awayInningScore[i].setText(Integer.toString(game.awayInningScores[i]));
-			if (i != game.inning - 1)
-				homeInningScore[i].setText(Integer.toString(game.homeInningScores[i]));
-			else if (game.topOfInning == false)
-				homeInningScore[i].setText(Integer.toString(game.homeInningScores[i]));				
+	}
+	
+	public void checkEndOfGame() {
+		if (game.endOfGame) {
+			Intent mainMenuIntent = new Intent(getApplicationContext(), MainMenu.class);
+			GameActivity.this.startActivity(mainMenuIntent);
+			GameActivity.this.finish();
 		}
-
 	}
 }

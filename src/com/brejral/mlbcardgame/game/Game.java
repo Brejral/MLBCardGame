@@ -2,10 +2,13 @@ package com.brejral.mlbcardgame.game;
 
 import java.util.Random;
 
+import android.content.Intent;
 import android.util.Log;
 
 import com.brejral.mlbcardgame.Card;
+import com.brejral.mlbcardgame.MainMenu;
 import com.brejral.mlbcardgame.Team;
+import com.brejral.mlbcardgame.exhibition.ExhibitionMenu;
 
 public class Game {
 	@SuppressWarnings("unused")
@@ -15,7 +18,7 @@ public class Game {
 	public String pitch;
 	public Random rand = new Random();
 	public int inning = 1, outs = 0;
-	public boolean topOfInning = true;
+	public boolean topOfInning = true, endOfGame, topOfInningEOGCheck;
 	public int homeScore, awayScore;
 	public int runnerAdvance;
 	public String result = "";
@@ -36,6 +39,7 @@ public class Game {
 		pitchRoll(n);
 		advanceBatterNum();
 		checkEndOfInning();
+		checkEndOfGame();
 		updateBatter();
 	}
 	
@@ -234,36 +238,41 @@ public class Game {
 	}
 
 	public void strikeOut() {
-		result = "Strike Out";
+		result = "strikes out";
 		outs++;
 		pitcher.gameStats[1]++;
 		pitcher.gameStats[7]++;
 		batter.gameStats[7]++;
+		hitLocation();
 	}
 	
 	public void groundBallOut() {
-		result = "Ground Out";
+		result = "grounds out";
 		outs++;
+		hitLocation();
 	}
 	
 	public void lineDriveOut() {
-		result = "Line Out";
+		result = "lines out";
 		outs++;
 		pitcher.gameStats[1]++;
+		hitLocation();
 	}
 	
 	public void flyBallOut() {
-		result = "Fly Out";
+		result = "flies out";
 		outs++;
+		hitLocation();
 	}
 	
 	public void infieldFlyBallOut() {
-		result = "Infield Fly Out";
+		result = "Infield flies out";
 		outs++;
+		hitLocation();
 	}
 	
 	public void walk() {
-		result = "Walk";
+		result = "walks";
 		batter.gameStats[6]++;
 		pitcher.gameStats[6]++;
 		if (runner3 != null && runner2 != null && runner1 != null) {
@@ -283,12 +292,12 @@ public class Game {
 		} else {
 			runner1 = batter;
 		}
-		
+		hitLocation();
 	}
 	
 	public void singleHit() {
 		addHit();
-		result = "Single";
+		result = "singles";
 		batter.gameStats[2]++;
 		pitcher.gameStats[2]++;
 		if (runner3 != null) {
@@ -309,11 +318,12 @@ public class Game {
 			runner1 = null;
 		}
 		runner1 = batter;
+		hitLocation();
 	}
 	
 	public void doubleHit() {
 		addHit();
-		result = "Double";
+		result = "doubles";
 		batter.gameStats[2]++;
 		batter.gameStats[3]++;
 		pitcher.gameStats[2]++;
@@ -338,11 +348,12 @@ public class Game {
 			runner1 = null;
 		}
 		runner2 = batter;
+		hitLocation();
 	}
 	
 	public void tripleHit() {
 		addHit();
-		result = "Triple";
+		result = "triples";
 		batter.gameStats[2]++;
 		batter.gameStats[4]++;
 		pitcher.gameStats[2]++;
@@ -369,11 +380,12 @@ public class Game {
 			runner1 = null;			
 		}
 		runner3 = batter;
+		hitLocation();
 	}
 	
 	public void homeRunHit() {
 		addHit();
-		result = "Home Run";
+		result = "homers";
 		batter.gameStats[2]++;
 		batter.gameStats[5]++;
 		pitcher.gameStats[2]++;
@@ -403,6 +415,7 @@ public class Game {
 		batter.gameStats[10]++;
 		pitcher.gameStats[9]++;
 		batter.gameStats[9]++;
+		hitLocation();
 	}
 	
 	public void addRun() {
@@ -450,9 +463,10 @@ public class Game {
 			runner1 = null;
 			runner2 = null;
 			runner3 = null;
-			if (topOfInning) 
+			if (topOfInning) {
 				topOfInning = false;
-			else {
+				topOfInningEOGCheck = false;
+			} else {
 				topOfInning = true;
 				inning++;
 			}
@@ -460,10 +474,1139 @@ public class Game {
 		}
 	}
 	
+	public void checkEndOfGame() {
+		if (inning >= 9 && topOfInning == false && homeScore > awayScore) {
+			endOfGame = true;
+		} else if (inning > 9 && topOfInning == true && topOfInningEOGCheck == false && awayScore > homeScore) {
+			endOfGame = true;
+		} else if (inning > 9 && topOfInning == true && topOfInningEOGCheck == false) {
+			topOfInningEOGCheck = true;
+		}
+		
+	}
+	
 	public void addHit() {
 		if (topOfInning)
 			awayHits++;
 		else
 			homeHits++;
+	}
+	
+	public void hitLocation() {
+		int locationRoll = rand.nextInt(1000 - 1) + 1;
+		if (pitch == "Fastball") {
+			if (result == "grounds out") {
+				if (locationRoll <= 20) {
+					result += " to catcher";
+				} else if (locationRoll <= 100) {
+					result += " to pitcher";
+				} else if (locationRoll <= 265) {
+					result += " to first";
+				} else if (locationRoll <= 510) {
+					result += " to second";
+				} else if (locationRoll <= 755) {
+					result += " to short";
+				} else {
+					result += " to third";
+				}
+			} else if (result == "lines out") {
+				if (locationRoll <= 20) {
+					result += " to pitcher";
+				} else if (locationRoll <= 40) {
+					result += " to first";
+				} else if (locationRoll <= 60) {
+					result += " to second";
+				} else if (locationRoll <= 80) {
+					result += " to short";
+				} else if (locationRoll <= 100){
+					result += " to third";
+				} else if (locationRoll <= 400) {
+					result += " to right";
+				} else if (locationRoll <= 700) {
+					result += " to center";
+				} else {
+					result += " to left";
+				}				
+			} else if (result == "flies out") {
+				if (locationRoll <= 333) {
+					result += " to right";
+				} else if (locationRoll <= 667) {
+					result += " to center";
+				} else {
+					result += " to left";
+				}
+			} else if (result == "Infield flies out") {
+				if (locationRoll <= 100) {
+					result = "flies out to catcher";
+				} else if (locationRoll <= 200) {
+					result = "flies out to pitcher";
+				} else if (locationRoll <= 400) {
+					result = "flies out to first";
+				} else if (locationRoll <= 600) {
+					result = "flies out to second";
+				} else if (locationRoll <= 800) {
+					result = "flies out to short";
+				} else {
+					result = "flies out to third";
+				}
+			} else if (result == "singles") {
+				if (locationRoll <= 10) {
+					result += " to catcher";
+				} else if (locationRoll <= 20) {
+					result += " to pitcher";
+				} else if (locationRoll <= 40) {
+					result += " to first";
+				} else if (locationRoll <= 60) {
+					result += " to second";
+				} else if (locationRoll <= 80) {
+					result += " to short";
+				} else if (locationRoll <= 100){
+					result += " to third";
+				} else if (locationRoll <= 400) {
+					result += " to right";
+				} else if (locationRoll <= 700) {
+					result += " to center";
+				} else {
+					result += " to left";
+				}				
+			} else if (result == "doubles") {
+				if (locationRoll <= 333) {
+					result += " to right";
+				} else if (locationRoll <= 667) {
+					result += " to center";
+				} else {
+					result += " to left";
+				}
+			} else if (result == "triples") {
+				if (locationRoll <= 333) {
+					result += " to right";
+				} else if (locationRoll <= 667) {
+					result += " to center";
+				} else {
+					result += " to left";
+				}
+			} else if (result == "homers") {
+				if (locationRoll <= 333) {
+					result += " to right";
+				} else if (locationRoll <= 667) {
+					result += " to center";
+				} else {
+					result += " to left";
+				}
+			}
+		} else if (pitch == "Two Seamer") {
+			if (batter.batsR) {
+				if (result == "grounds out") {
+					if (locationRoll <= 20) {
+						result += " to catcher";
+					} else if (locationRoll <= 100) {
+						result += " to pitcher";
+					} else if (locationRoll <= 350) {
+						result += " to first";
+					} else if (locationRoll <= 600) {
+						result += " to second";
+					} else if (locationRoll <= 800) {
+						result += " to short";
+					} else {
+						result += " to third";
+					}
+				} else if (result == "lines out") {
+					if (locationRoll <= 20) {
+						result += " to pitcher";
+					} else if (locationRoll <= 45) {
+						result += " to first";
+					} else if (locationRoll <= 70) {
+						result += " to second";
+					} else if (locationRoll <= 85) {
+						result += " to short";
+					} else if (locationRoll <= 100){
+						result += " to third";
+					} else if (locationRoll <= 500) {
+						result += " to right";
+					} else if (locationRoll <= 800) {
+						result += " to center";
+					} else {
+						result += " to left";
+					}				
+				} else if (result == "flies out") {
+					if (locationRoll <= 400) {
+						result += " to right";
+					} else if (locationRoll <= 700) {
+						result += " to center";
+					} else {
+						result += " to left";
+					}
+				} else if (result == "Infield flies out") {
+					if (locationRoll <= 100) {
+						result = "flies out to catcher";
+					} else if (locationRoll <= 200) {
+						result = "flies out to pitcher";
+					} else if (locationRoll <= 450) {
+						result = "flies out to first";
+					} else if (locationRoll <= 700) {
+						result = "flies out to second";
+					} else if (locationRoll <= 850) {
+						result = "flies out to short";
+					} else {
+						result = "flies out to third";
+					}
+				} else if (result == "singles") {
+					if (locationRoll <= 10) {
+						result += " to catcher";
+					} else if (locationRoll <= 20) {
+						result += " to pitcher";
+					} else if (locationRoll <= 45) {
+						result += " to first";
+					} else if (locationRoll <= 70) {
+						result += " to second";
+					} else if (locationRoll <= 85) {
+						result += " to short";
+					} else if (locationRoll <= 100){
+						result += " to third";
+					} else if (locationRoll <= 500) {
+						result += " to right";
+					} else if (locationRoll <= 800) {
+						result += " to center";
+					} else {
+						result += " to left";
+					}				
+				} else if (result == "doubles") {
+					if (locationRoll <= 400) {
+						result += " to right";
+					} else if (locationRoll <= 700) {
+						result += " to center";
+					} else {
+						result += " to left";
+					}
+				} else if (result == "triples") {
+					if (locationRoll <= 400) {
+						result += " to right";
+					} else if (locationRoll <= 700) {
+						result += " to center";
+					} else {
+						result += " to left";
+					}
+				} else if (result == "homers") {
+					if (locationRoll <= 400) {
+						result += " to right";
+					} else if (locationRoll <= 700) {
+						result += " to center";
+					} else {
+						result += " to left";
+					}
+				}
+
+			} else { //batsL for Two-Seamer
+				if (result == "grounds out") {
+					if (locationRoll <= 20) {
+						result += " to catcher";
+					} else if (locationRoll <= 100) {
+						result += " to pitcher";
+					} else if (locationRoll <= 300) {
+						result += " to first";
+					} else if (locationRoll <= 500) {
+						result += " to second";
+					} else if (locationRoll <= 750) {
+						result += " to short";
+					} else {
+						result += " to third";
+					}
+				} else if (result == "lines out") {
+					if (locationRoll <= 20) {
+						result += " to pitcher";
+					} else if (locationRoll <= 35) {
+						result += " to first";
+					} else if (locationRoll <= 50) {
+						result += " to second";
+					} else if (locationRoll <= 75) {
+						result += " to short";
+					} else if (locationRoll <= 100){
+						result += " to third";
+					} else if (locationRoll <= 300) {
+						result += " to right";
+					} else if (locationRoll <= 600) {
+						result += " to center";
+					} else {
+						result += " to left";
+					}				
+				} else if (result == "flies out") {
+					if (locationRoll <= 300) {
+						result += " to right";
+					} else if (locationRoll <= 600) {
+						result += " to center";
+					} else {
+						result += " to left";
+					}
+				} else if (result == "Infield flies out") {
+					if (locationRoll <= 100) {
+						result = "flies out to catcher";
+					} else if (locationRoll <= 200) {
+						result = "flies out to pitcher";
+					} else if (locationRoll <= 350) {
+						result = "flies out to first";
+					} else if (locationRoll <= 500) {
+						result = "flies out to second";
+					} else if (locationRoll <= 750) {
+						result = "flies out to short";
+					} else {
+						result = "flies out to third";
+					}
+				} else if (result == "singles") {
+					if (locationRoll <= 10) {
+						result += " to catcher";
+					} else if (locationRoll <= 20) {
+						result += " to pitcher";
+					} else if (locationRoll <= 35) {
+						result += " to first";
+					} else if (locationRoll <= 50) {
+						result += " to second";
+					} else if (locationRoll <= 75) {
+						result += " to short";
+					} else if (locationRoll <= 100){
+						result += " to third";
+					} else if (locationRoll <= 300) {
+						result += " to right";
+					} else if (locationRoll <= 600) {
+						result += " to center";
+					} else {
+						result += " to left";
+					}				
+				} else if (result == "doubles") {
+					if (locationRoll <= 300) {
+						result += " to right";
+					} else if (locationRoll <= 600) {
+						result += " to center";
+					} else {
+						result += " to left";
+					}
+				} else if (result == "triples") {
+					if (locationRoll <= 300) {
+						result += " to right";
+					} else if (locationRoll <= 600) {
+						result += " to center";
+					} else {
+						result += " to left";
+					}
+				} else if (result == "homers") {
+					if (locationRoll <= 300) {
+						result += " to right";
+					} else if (locationRoll <= 600) {
+						result += " to center";
+					} else {
+						result += " to left";
+					}
+				}				
+			}
+		} else if (pitch == "Changeup") {
+			if (batter.batsR) {
+				if (result == "grounds out") {
+					if (locationRoll <= 20) {
+						result += " to catcher";
+					} else if (locationRoll <= 100) {
+						result += " to pitcher";
+					} else if (locationRoll <= 200) {
+						result += " to first";
+					} else if (locationRoll <= 400) {
+						result += " to second";
+					} else if (locationRoll <= 700) {
+						result += " to short";
+					} else {
+						result += " to third";
+					}
+				} else if (result == "lines out") {
+					if (locationRoll <= 20) {
+						result += " to pitcher";
+					} else if (locationRoll <= 30) {
+						result += " to first";
+					} else if (locationRoll <= 50) {
+						result += " to second";
+					} else if (locationRoll <= 75) {
+						result += " to short";
+					} else if (locationRoll <= 100){
+						result += " to third";
+					} else if (locationRoll <= 200) {
+						result += " to right";
+					} else if (locationRoll <= 500) {
+						result += " to center";
+					} else {
+						result += " to left";
+					}				
+				} else if (result == "flies out") {
+					if (locationRoll <= 100) {
+						result += " to right";
+					} else if (locationRoll <= 450) {
+						result += " to center";
+					} else {
+						result += " to left";
+					}
+				} else if (result == "Infield flies out") {
+					if (locationRoll <= 100) {
+						result = "flies out to catcher";
+					} else if (locationRoll <= 200) {
+						result = "flies out to pitcher";
+					} else if (locationRoll <= 300) {
+						result = "flies out to first";
+					} else if (locationRoll <= 500) {
+						result = "flies out to second";
+					} else if (locationRoll <= 750) {
+						result = "flies out to short";
+					} else {
+						result = "flies out to third";
+					}
+				} else if (result == "singles") {
+					if (locationRoll <= 10) {
+						result += " to catcher";
+					} else if (locationRoll <= 20) {
+						result += " to pitcher";
+					} else if (locationRoll <= 30) {
+						result += " to first";
+					} else if (locationRoll <= 50) {
+						result += " to second";
+					} else if (locationRoll <= 75) {
+						result += " to short";
+					} else if (locationRoll <= 100){
+						result += " to third";
+					} else if (locationRoll <= 200) {
+						result += " to right";
+					} else if (locationRoll <= 500) {
+						result += " to center";
+					} else {
+						result += " to left";
+					}				
+				} else if (result == "doubles") {
+					if (locationRoll <= 100) {
+						result += " to right";
+					} else if (locationRoll <= 450) {
+						result += " to center";
+					} else {
+						result += " to left";
+					}
+				} else if (result == "triples") {
+					if (locationRoll <= 100) {
+						result += " to right";
+					} else if (locationRoll <= 450) {
+						result += " to center";
+					} else {
+						result += " to left";
+					}
+				} else if (result == "homers") {
+					if (locationRoll <= 100) {
+						result += " to right";
+					} else if (locationRoll <= 450) {
+						result += " to center";
+					} else {
+						result += " to left";
+					}
+				}
+
+			} else { //batsL for Change Up
+				if (result == "grounds out") {
+					if (locationRoll <= 20) {
+						result += " to catcher";
+					} else if (locationRoll <= 100) {
+						result += " to pitcher";
+					} else if (locationRoll <= 400) {
+						result += " to first";
+					} else if (locationRoll <= 700) {
+						result += " to second";
+					} else if (locationRoll <= 900) {
+						result += " to short";
+					} else {
+						result += " to third";
+					}
+				} else if (result == "lines out") {
+					if (locationRoll <= 20) {
+						result += " to pitcher";
+					} else if (locationRoll <= 45) {
+						result += " to first";
+					} else if (locationRoll <= 70) {
+						result += " to second";
+					} else if (locationRoll <= 90) {
+						result += " to short";
+					} else if (locationRoll <= 100){
+						result += " to third";
+					} else if (locationRoll <= 300) {
+						result += " to right";
+					} else if (locationRoll <= 600) {
+						result += " to center";
+					} else {
+						result += " to left";
+					}				
+				} else if (result == "flies out") {
+					if (locationRoll <= 550) {
+						result += " to right";
+					} else if (locationRoll <= 900) {
+						result += " to center";
+					} else {
+						result += " to left";
+					}
+				} else if (result == "Infield Fly Out") {
+					if (locationRoll <= 100) {
+						result = "flies out to catcher";
+					} else if (locationRoll <= 200) {
+						result = "flies out to pitcher";
+					} else if (locationRoll <= 450) {
+						result = "flies out to first";
+					} else if (locationRoll <= 700) {
+						result = "flies out to second";
+					} else if (locationRoll <= 900) {
+						result = "flies out to short";
+					} else {
+						result = "flies out to third";
+					}
+				} else if (result == "singles") {
+					if (locationRoll <= 10) {
+						result += " to catcher";
+					} else if (locationRoll <= 20) {
+						result += " to pitcher";
+					} else if (locationRoll <= 45) {
+						result += " to first";
+					} else if (locationRoll <= 70) {
+						result += " to second";
+					} else if (locationRoll <= 90) {
+						result += " to short";
+					} else if (locationRoll <= 100){
+						result += " to third";
+					} else if (locationRoll <= 600) {
+						result += " to right";
+					} else if (locationRoll <= 900) {
+						result += " to center";
+					} else {
+						result += " to left";
+					}				
+				} else if (result == "doubles") {
+					if (locationRoll <= 550) {
+						result += " to right";
+					} else if (locationRoll <= 900) {
+						result += " to center";
+					} else {
+						result += " to left";
+					}
+				} else if (result == "triples") {
+					if (locationRoll <= 550) {
+						result += " to right";
+					} else if (locationRoll <= 900) {
+						result += " to center";
+					} else {
+						result += " to left";
+					}
+				} else if (result == "homers") {
+					if (locationRoll <= 550) {
+						result += " to right";
+					} else if (locationRoll <= 900) {
+						result += " to center";
+					} else {
+						result += " to left";
+					}
+				}				
+			} //end else for Change Up
+		} else if (pitch == "Curveball" || pitch == "Knuckle Curve") {
+			if (pitcher.throwsL) {
+				if (result == "grounds out") {
+					if (locationRoll <= 20) {
+						result += " to catcher";
+					} else if (locationRoll <= 100) {
+						result += " to pitcher";
+					} else if (locationRoll <= 200) {
+						result += " to first";
+					} else if (locationRoll <= 400) {
+						result += " to second";
+					} else if (locationRoll <= 700) {
+						result += " to short";
+					} else {
+						result += " to third";
+					}
+				} else if (result == "lines out") {
+					if (locationRoll <= 20) {
+						result += " to pitcher";
+					} else if (locationRoll <= 30) {
+						result += " to first";
+					} else if (locationRoll <= 50) {
+						result += " to second";
+					} else if (locationRoll <= 75) {
+						result += " to short";
+					} else if (locationRoll <= 100){
+						result += " to third";
+					} else if (locationRoll <= 200) {
+						result += " to right";
+					} else if (locationRoll <= 500) {
+						result += " to center";
+					} else {
+						result += " to left";
+					}				
+				} else if (result == "flies out") {
+					if (locationRoll <= 100) {
+						result += " to right";
+					} else if (locationRoll <= 450) {
+						result += " to center";
+					} else {
+						result += " to left";
+					}
+				} else if (result == "Infield flies out") {
+					if (locationRoll <= 100) {
+						result = "flies out to catcher";
+					} else if (locationRoll <= 200) {
+						result = "flies out to pitcher";
+					} else if (locationRoll <= 300) {
+						result = "flies out to first";
+					} else if (locationRoll <= 500) {
+						result = "flies out to second";
+					} else if (locationRoll <= 750) {
+						result = "flies out to short";
+					} else {
+						result = "flies out to third";
+					}
+				} else if (result == "singles") {
+					if (locationRoll <= 10) {
+						result += " to catcher";
+					} else if (locationRoll <= 20) {
+						result += " to pitcher";
+					} else if (locationRoll <= 30) {
+						result += " to first";
+					} else if (locationRoll <= 50) {
+						result += " to second";
+					} else if (locationRoll <= 75) {
+						result += " to short";
+					} else if (locationRoll <= 100){
+						result += " to third";
+					} else if (locationRoll <= 200) {
+						result += " to right";
+					} else if (locationRoll <= 500) {
+						result += " to center";
+					} else {
+						result += " to left";
+					}				
+				} else if (result == "doubles") {
+					if (locationRoll <= 100) {
+						result += " to right";
+					} else if (locationRoll <= 450) {
+						result += " to center";
+					} else {
+						result += " to left";
+					}
+				} else if (result == "triples") {
+					if (locationRoll <= 100) {
+						result += " to right";
+					} else if (locationRoll <= 450) {
+						result += " to center";
+					} else {
+						result += " to left";
+					}
+				} else if (result == "homers") {
+					if (locationRoll <= 100) {
+						result += " to right";
+					} else if (locationRoll <= 450) {
+						result += " to center";
+					} else {
+						result += " to left";
+					}
+				}
+
+			} else { //batsL for Change Up
+				if (result == "grounds out") {
+					if (locationRoll <= 20) {
+						result += " to catcher";
+					} else if (locationRoll <= 100) {
+						result += " to pitcher";
+					} else if (locationRoll <= 400) {
+						result += " to first";
+					} else if (locationRoll <= 700) {
+						result += " to second";
+					} else if (locationRoll <= 900) {
+						result += " to short";
+					} else {
+						result += " to third";
+					}
+				} else if (result == "lines out") {
+					if (locationRoll <= 20) {
+						result += " to pitcher";
+					} else if (locationRoll <= 45) {
+						result += " to first";
+					} else if (locationRoll <= 70) {
+						result += " to second";
+					} else if (locationRoll <= 90) {
+						result += " to short";
+					} else if (locationRoll <= 100){
+						result += " to third";
+					} else if (locationRoll <= 300) {
+						result += " to right";
+					} else if (locationRoll <= 600) {
+						result += " to center";
+					} else {
+						result += " to left";
+					}				
+				} else if (result == "flies out") {
+					if (locationRoll <= 550) {
+						result += " to right";
+					} else if (locationRoll <= 900) {
+						result += " to center";
+					} else {
+						result += " to left";
+					}
+				} else if (result == "Infield Fly Out") {
+					if (locationRoll <= 100) {
+						result = "flies out to catcher";
+					} else if (locationRoll <= 200) {
+						result = "flies out to pitcher";
+					} else if (locationRoll <= 450) {
+						result = "flies out to first";
+					} else if (locationRoll <= 700) {
+						result = "flies out to second";
+					} else if (locationRoll <= 900) {
+						result = "flies out to short";
+					} else {
+						result = "flies out to third";
+					}
+				} else if (result == "singles") {
+					if (locationRoll <= 10) {
+						result += " to catcher";
+					} else if (locationRoll <= 20) {
+						result += " to pitcher";
+					} else if (locationRoll <= 45) {
+						result += " to first";
+					} else if (locationRoll <= 70) {
+						result += " to second";
+					} else if (locationRoll <= 90) {
+						result += " to short";
+					} else if (locationRoll <= 100){
+						result += " to third";
+					} else if (locationRoll <= 600) {
+						result += " to right";
+					} else if (locationRoll <= 900) {
+						result += " to center";
+					} else {
+						result += " to left";
+					}				
+				} else if (result == "doubles") {
+					if (locationRoll <= 550) {
+						result += " to right";
+					} else if (locationRoll <= 900) {
+						result += " to center";
+					} else {
+						result += " to left";
+					}
+				} else if (result == "triples") {
+					if (locationRoll <= 550) {
+						result += " to right";
+					} else if (locationRoll <= 900) {
+						result += " to center";
+					} else {
+						result += " to left";
+					}
+				} else if (result == "homers") {
+					if (locationRoll <= 550) {
+						result += " to right";
+					} else if (locationRoll <= 900) {
+						result += " to center";
+					} else {
+						result += " to left";
+					}
+				}				
+			} //end else for Curveball
+		} else if (pitch == "Slider" || pitch == "Cutter") {
+			if (pitcher.throwsL) {
+				if (result == "grounds out") {
+					if (locationRoll <= 20) {
+						result += " to catcher";
+					} else if (locationRoll <= 100) {
+						result += " to pitcher";
+					} else if (locationRoll <= 200) {
+						result += " to first";
+					} else if (locationRoll <= 400) {
+						result += " to second";
+					} else if (locationRoll <= 700) {
+						result += " to short";
+					} else {
+						result += " to third";
+					}
+				} else if (result == "lines out") {
+					if (locationRoll <= 20) {
+						result += " to pitcher";
+					} else if (locationRoll <= 30) {
+						result += " to first";
+					} else if (locationRoll <= 50) {
+						result += " to second";
+					} else if (locationRoll <= 75) {
+						result += " to short";
+					} else if (locationRoll <= 100){
+						result += " to third";
+					} else if (locationRoll <= 200) {
+						result += " to right";
+					} else if (locationRoll <= 500) {
+						result += " to center";
+					} else {
+						result += " to left";
+					}				
+				} else if (result == "flies out") {
+					if (locationRoll <= 100) {
+						result += " to right";
+					} else if (locationRoll <= 450) {
+						result += " to center";
+					} else {
+						result += " to left";
+					}
+				} else if (result == "Infield flies out") {
+					if (locationRoll <= 100) {
+						result = "flies out to catcher";
+					} else if (locationRoll <= 200) {
+						result = "flies out to pitcher";
+					} else if (locationRoll <= 300) {
+						result = "flies out to first";
+					} else if (locationRoll <= 500) {
+						result = "flies out to second";
+					} else if (locationRoll <= 750) {
+						result = "flies out to short";
+					} else {
+						result = "flies out to third";
+					}
+				} else if (result == "singles") {
+					if (locationRoll <= 10) {
+						result += " to catcher";
+					} else if (locationRoll <= 20) {
+						result += " to pitcher";
+					} else if (locationRoll <= 30) {
+						result += " to first";
+					} else if (locationRoll <= 50) {
+						result += " to second";
+					} else if (locationRoll <= 75) {
+						result += " to short";
+					} else if (locationRoll <= 100){
+						result += " to third";
+					} else if (locationRoll <= 200) {
+						result += " to right";
+					} else if (locationRoll <= 500) {
+						result += " to center";
+					} else {
+						result += " to left";
+					}				
+				} else if (result == "doubles") {
+					if (locationRoll <= 100) {
+						result += " to right";
+					} else if (locationRoll <= 450) {
+						result += " to center";
+					} else {
+						result += " to left";
+					}
+				} else if (result == "triples") {
+					if (locationRoll <= 100) {
+						result += " to right";
+					} else if (locationRoll <= 450) {
+						result += " to center";
+					} else {
+						result += " to left";
+					}
+				} else if (result == "homers") {
+					if (locationRoll <= 100) {
+						result += " to right";
+					} else if (locationRoll <= 450) {
+						result += " to center";
+					} else {
+						result += " to left";
+					}
+				}
+
+			} else { //batsL for Change Up
+				if (result == "grounds out") {
+					if (locationRoll <= 20) {
+						result += " to catcher";
+					} else if (locationRoll <= 100) {
+						result += " to pitcher";
+					} else if (locationRoll <= 400) {
+						result += " to first";
+					} else if (locationRoll <= 700) {
+						result += " to second";
+					} else if (locationRoll <= 900) {
+						result += " to short";
+					} else {
+						result += " to third";
+					}
+				} else if (result == "lines out") {
+					if (locationRoll <= 20) {
+						result += " to pitcher";
+					} else if (locationRoll <= 45) {
+						result += " to first";
+					} else if (locationRoll <= 70) {
+						result += " to second";
+					} else if (locationRoll <= 90) {
+						result += " to short";
+					} else if (locationRoll <= 100){
+						result += " to third";
+					} else if (locationRoll <= 300) {
+						result += " to right";
+					} else if (locationRoll <= 600) {
+						result += " to center";
+					} else {
+						result += " to left";
+					}				
+				} else if (result == "flies out") {
+					if (locationRoll <= 550) {
+						result += " to right";
+					} else if (locationRoll <= 900) {
+						result += " to center";
+					} else {
+						result += " to left";
+					}
+				} else if (result == "Infield Fly Out") {
+					if (locationRoll <= 100) {
+						result = "flies out to catcher";
+					} else if (locationRoll <= 200) {
+						result = "flies out to pitcher";
+					} else if (locationRoll <= 450) {
+						result = "flies out to first";
+					} else if (locationRoll <= 700) {
+						result = "flies out to second";
+					} else if (locationRoll <= 900) {
+						result = "flies out to short";
+					} else {
+						result = "flies out to third";
+					}
+				} else if (result == "singles") {
+					if (locationRoll <= 10) {
+						result += " to catcher";
+					} else if (locationRoll <= 20) {
+						result += " to pitcher";
+					} else if (locationRoll <= 45) {
+						result += " to first";
+					} else if (locationRoll <= 70) {
+						result += " to second";
+					} else if (locationRoll <= 90) {
+						result += " to short";
+					} else if (locationRoll <= 100){
+						result += " to third";
+					} else if (locationRoll <= 600) {
+						result += " to right";
+					} else if (locationRoll <= 900) {
+						result += " to center";
+					} else {
+						result += " to left";
+					}				
+				} else if (result == "doubles") {
+					if (locationRoll <= 550) {
+						result += " to right";
+					} else if (locationRoll <= 900) {
+						result += " to center";
+					} else {
+						result += " to left";
+					}
+				} else if (result == "triples") {
+					if (locationRoll <= 550) {
+						result += " to right";
+					} else if (locationRoll <= 900) {
+						result += " to center";
+					} else {
+						result += " to left";
+					}
+				} else if (result == "homers") {
+					if (locationRoll <= 550) {
+						result += " to right";
+					} else if (locationRoll <= 900) {
+						result += " to center";
+					} else {
+						result += " to left";
+					}
+				}				
+			} //end else for Slider
+		} else if (pitch == "Sinker" || pitch == "Splitter" || pitch == "Forkball") {
+			if (result == "grounds out") {
+				if (locationRoll <= 20) {
+					result += " to catcher";
+				} else if (locationRoll <= 100) {
+					result += " to pitcher";
+				} else if (locationRoll <= 265) {
+					result += " to first";
+				} else if (locationRoll <= 510) {
+					result += " to second";
+				} else if (locationRoll <= 755) {
+					result += " to short";
+				} else {
+					result += " to third";
+				}
+			} else if (result == "lines out") {
+				if (locationRoll <= 20) {
+					result += " to pitcher";
+				} else if (locationRoll <= 40) {
+					result += " to first";
+				} else if (locationRoll <= 60) {
+					result += " to second";
+				} else if (locationRoll <= 80) {
+					result += " to short";
+				} else if (locationRoll <= 100){
+					result += " to third";
+				} else if (locationRoll <= 400) {
+					result += " to right";
+				} else if (locationRoll <= 700) {
+					result += " to center";
+				} else {
+					result += " to left";
+				}				
+			} else if (result == "flies out") {
+				if (locationRoll <= 333) {
+					result += " to right";
+				} else if (locationRoll <= 667) {
+					result += " to center";
+				} else {
+					result += " to left";
+				}
+			} else if (result == "Infield flies out") {
+				if (locationRoll <= 100) {
+					result = "flies out to catcher";
+				} else if (locationRoll <= 200) {
+					result = "flies out to pitcher";
+				} else if (locationRoll <= 400) {
+					result = "flies out to first";
+				} else if (locationRoll <= 600) {
+					result = "flies out to second";
+				} else if (locationRoll <= 800) {
+					result = "flies out to short";
+				} else {
+					result = "flies out to third";
+				}
+			} else if (result == "singles") {
+				if (locationRoll <= 10) {
+					result += " to catcher";
+				} else if (locationRoll <= 20) {
+					result += " to pitcher";
+				} else if (locationRoll <= 40) {
+					result += " to first";
+				} else if (locationRoll <= 60) {
+					result += " to second";
+				} else if (locationRoll <= 80) {
+					result += " to short";
+				} else if (locationRoll <= 100){
+					result += " to third";
+				} else if (locationRoll <= 400) {
+					result += " to right";
+				} else if (locationRoll <= 700) {
+					result += " to center";
+				} else {
+					result += " to left";
+				}				
+			} else if (result == "doubles") {
+				if (locationRoll <= 333) {
+					result += " to right";
+				} else if (locationRoll <= 667) {
+					result += " to center";
+				} else {
+					result += " to left";
+				}
+			} else if (result == "triples") {
+				if (locationRoll <= 333) {
+					result += " to right";
+				} else if (locationRoll <= 667) {
+					result += " to center";
+				} else {
+					result += " to left";
+				}
+			} else if (result == "homers") {
+				if (locationRoll <= 333) {
+					result += " to right";
+				} else if (locationRoll <= 667) {
+					result += " to center";
+				} else {
+					result += " to left";
+				}
+			}
+		} else {
+			if (result == "grounds out") {
+				if (locationRoll <= 20) {
+					result += " to catcher";
+				} else if (locationRoll <= 100) {
+					result += " to pitcher";
+				} else if (locationRoll <= 265) {
+					result += " to first";
+				} else if (locationRoll <= 510) {
+					result += " to second";
+				} else if (locationRoll <= 755) {
+					result += " to short";
+				} else {
+					result += " to third";
+				}
+			} else if (result == "lines out") {
+				if (locationRoll <= 20) {
+					result += " to pitcher";
+				} else if (locationRoll <= 40) {
+					result += " to first";
+				} else if (locationRoll <= 60) {
+					result += " to second";
+				} else if (locationRoll <= 80) {
+					result += " to short";
+				} else if (locationRoll <= 100){
+					result += " to third";
+				} else if (locationRoll <= 400) {
+					result += " to right";
+				} else if (locationRoll <= 700) {
+					result += " to center";
+				} else {
+					result += " to left";
+				}				
+			} else if (result == "flies out") {
+				if (locationRoll <= 333) {
+					result += " to right";
+				} else if (locationRoll <= 667) {
+					result += " to center";
+				} else {
+					result += " to left";
+				}
+			} else if (result == "Infield flies out") {
+				if (locationRoll <= 100) {
+					result = "flies out to catcher";
+				} else if (locationRoll <= 200) {
+					result = "flies out to pitcher";
+				} else if (locationRoll <= 400) {
+					result = "flies out to first";
+				} else if (locationRoll <= 600) {
+					result = "flies out to second";
+				} else if (locationRoll <= 800) {
+					result = "flies out to short";
+				} else {
+					result = "flies out to third";
+				}
+			} else if (result == "singles") {
+				if (locationRoll <= 10) {
+					result += " to catcher";
+				} else if (locationRoll <= 20) {
+					result += " to pitcher";
+				} else if (locationRoll <= 40) {
+					result += " to first";
+				} else if (locationRoll <= 60) {
+					result += " to second";
+				} else if (locationRoll <= 80) {
+					result += " to short";
+				} else if (locationRoll <= 100){
+					result += " to third";
+				} else if (locationRoll <= 400) {
+					result += " to right";
+				} else if (locationRoll <= 700) {
+					result += " to center";
+				} else {
+					result += " to left";
+				}				
+			} else if (result == "doubles") {
+				if (locationRoll <= 333) {
+					result += " to right";
+				} else if (locationRoll <= 667) {
+					result += " to center";
+				} else {
+					result += " to left";
+				}
+			} else if (result == "triples") {
+				if (locationRoll <= 333) {
+					result += " to right";
+				} else if (locationRoll <= 667) {
+					result += " to center";
+				} else {
+					result += " to left";
+				}
+			} else if (result == "homers") {
+				if (locationRoll <= 333) {
+					result += " to right";
+				} else if (locationRoll <= 667) {
+					result += " to center";
+				} else {
+					result += " to left";
+				}
+			}
+		}
+		result = batter.lastName + " " + result;
 	}
 }

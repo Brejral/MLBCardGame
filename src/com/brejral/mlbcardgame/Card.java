@@ -2,7 +2,7 @@ package com.brejral.mlbcardgame;
 
 public class Card {
 	public int id;  
-	public String name;
+	public String name, lastName;
 	public int imageId;
 	public boolean batsR, batsL, batsS, throwsR;
 	public boolean throwsL;
