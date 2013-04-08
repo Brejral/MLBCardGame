@@ -23,4 +23,13 @@
 	<string name="back">Back</string>
 	<string name="inning">Inning</string>
 	<string name="outs">Outs</string>
+	<string name="ab">AB</string>
+	<string name="r">R</string>
+	<string name="h">H</string>
+	<string name="hr">HR</string>
+	<string name="avg">AVG</string>
+	<string name="bb">BB</string>
+	<string name="so">SO</string>
+	<string name="obp">OBP</string>
+	<string name="slg">SLG</string>
 </resources>
