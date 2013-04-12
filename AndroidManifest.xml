@@ -11,5 +11,7 @@
 		<activity android:name="com.brejral.mlbcardgame.exhibition.ExhibitionMenu" android:screenOrientation="portrait" android:theme="@android:style/Theme.Light.NoTitleBar"/>
 		<activity android:name="com.brejral.mlbcardgame.exhibition.ExhibitionSelectTeam" android:screenOrientation="portrait" android:theme="@android:style/Theme.Light.NoTitleBar"/>
 		<activity android:name="com.brejral.mlbcardgame.game.GameActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen"/>
+		<activity android:name="com.brejral.mlbcardgame.game.GameBoxScoreActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen"/>
+		<activity android:name="com.brejral.mlbcardgame.game.GameBoxScoreTabActivity" />
 	</application>
 </manifest>

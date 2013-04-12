@@ -10,49 +10,8 @@
         android:layout_alignLeft="@id/gl_surface_view"
         android:layout_alignTop="@id/gl_surface_view"
         android:layout_centerHorizontal="true"
+        android:clickable="true"
         android:src="@drawable/scoreboard" />
-
-    <TextView
-        android:id="@+id/inningtext"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/resultbox"
-        android:layout_alignTop="@id/resultbox"
-        android:gravity="center"
-        android:text="@string/inning"
-        android:textColor="@android:color/white"
-        android:textSize="20sp" />
-
-    <TextView
-        android:id="@+id/outstext"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/resultbox"
-        android:layout_alignTop="@id/resultbox"
-        android:gravity="center"
-        android:text="@string/outs"
-        android:textColor="@android:color/white"
-        android:textSize="20sp" />
-
-    <TextView
-        android:id="@+id/inning"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/resultbox"
-        android:layout_alignTop="@id/resultbox"
-        android:gravity="center_horizontal"
-        android:textColor="@android:color/white"
-        android:textSize="20sp" />
-
-    <TextView
-        android:id="@+id/outs"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/resultbox"
-        android:layout_alignTop="@id/resultbox"
-        android:gravity="center_horizontal"
-        android:textColor="@android:color/white"
-        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/awayTeamName"
@@ -247,18 +206,16 @@
         android:textSize="20sp" />
 
     <TabHost
-        android:id="@android:id/tabhost"
+        android:id="@+id/tabhost"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/scoreboard"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="68dp" >
+        android:layout_centerHorizontal="true" >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_weight="1" >
+            android:orientation="vertical" >
 
             <TabWidget
                 android:id="@android:id/tabs"
@@ -270,20 +227,16 @@
                 android:id="@android:id/tabcontent"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" >
-
-                <LinearLayout
-                    android:id="@+id/awayBoxScore"
+                
+                <TableLayout
+                    android:id="@+id/awayTab"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="Away" >
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/homeBoxScore"
+                    android:layout_height="match_parent" />
+                
+                <TableLayout
+                    android:id="@+id/homeTab"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="Home" >
-                </LinearLayout>
+                    android:layout_height="match_parent" />
 
             </FrameLayout>
         </LinearLayout>

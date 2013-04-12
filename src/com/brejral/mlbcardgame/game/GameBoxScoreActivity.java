@@ -1,21 +1,38 @@
 package com.brejral.mlbcardgame.game;
 
-import com.brejral.mlbcardgame.R;
-
 import android.app.Activity;
+import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroup.MarginLayoutParams;
+import android.widget.ImageView;
+import android.widget.TabHost;
+import android.widget.TabHost.OnTabChangeListener;
+import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 
-public class GameBoxScoreActivity extends Activity {
+import com.brejral.mlbcardgame.R;
+
+public class GameBoxScoreActivity extends Activity implements OnTabChangeListener {
 	public TextView awayTeamText, awayRuns, awayHits, awayInningScore[];
 	public TextView homeTeamText, homeRuns, homeHits, homeInningScore[];
-	public Game game;
-	public int sWidth, sHeight;
+	public ImageView scoreboard;
+	public static Game game;
+	public static int sWidth, sHeight;
+	private TabHost tabHost;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		setContentView(R.layout.game_box_score);
+		
+		awayInningScore = new TextView[9];
+		homeInningScore = new TextView[9];
+
+		scoreboard = (ImageView)findViewById(R.id.scoreboard);
 		awayTeamText = (TextView)findViewById(R.id.awayTeamName);
 		homeTeamText = (TextView)findViewById(R.id.homeTeamName);
 		awayInningScore[0] = (TextView)findViewById(R.id.awayInning1);
@@ -40,10 +57,52 @@ public class GameBoxScoreActivity extends Activity {
 		homeInningScore[8] = (TextView)findViewById(R.id.homeInning9);
 		homeRuns = (TextView)findViewById(R.id.homeRuns);
 		homeHits = (TextView)findViewById(R.id.homeHits);
-
+		
+		scoreboard.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				GameBoxScoreActivity.this.finish();
+			}
+		});
+		
+		setBoxScore();
+		setBoxScoreTabs();
+		setTeamBoxScore();
 	}
-	public void setBoxScoreTextBoxes() {
-		float ratio = sWidth/1080;
+	
+	public void setBoxScoreTabs() {
+		tabHost = (TabHost)findViewById(R.id.tabhost);
+		tabHost.setup();
+		tabHost.setOnTabChangedListener(this);
+		
+		Resources resources = getResources();
+		
+		TabSpec tabSpecAway = tabHost
+				.newTabSpec(game.awayTeam.teamName)
+				.setIndicator("", resources.getDrawable(game.awayTeam.logo))
+				.setContent(R.id.awayTab);
+		
+		TabSpec tabSpecHome = tabHost
+				.newTabSpec(game.homeTeam.teamName)
+				.setIndicator("", resources.getDrawable(game.homeTeam.logo))
+				.setContent(R.id.homeTab);
+		
+		tabHost.addTab(tabSpecAway);
+		tabHost.addTab(tabSpecHome);
+		
+	}
+	
+	public void setTeamBoxScore() {
+		
+	}
+	
+	public void setBoxScore() {
+		float ratio = sWidth/1080f;
+		
+		LayoutParams layoutScoreboard = scoreboard.getLayoutParams();
+		layoutScoreboard.width = sWidth;
+		layoutScoreboard.height = (int) (ratio*240);
+		scoreboard.setLayoutParams(layoutScoreboard);
 		
 		LayoutParams layoutParams = awayTeamText.getLayoutParams();
 		layoutParams.width = (int) (ratio*350);
@@ -195,6 +254,12 @@ public class GameBoxScoreActivity extends Activity {
 		((MarginLayoutParams) layoutParams).setMargins((int)(1018*ratio), (int)(164*ratio), 0, 0);
 		homeHits.setLayoutParams(layoutParams);
 		homeHits.setText("0");
+	}
+
+	@Override
+	public void onTabChanged(String arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

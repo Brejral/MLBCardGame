@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/gl_surface_view"
         android:layout_alignRight="@id/gl_surface_view"
+        android:clickable="true"
         android:src="@drawable/miniscoreboardtop" />
     
     <ImageView

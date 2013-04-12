@@ -595,7 +595,7 @@ public class Game {
 				}
 			}
 		} else if (pitch == "Two Seamer") {
-			if (batter.batsR) {
+			if (batter.batsR || (batter.batsS && pitcher.throwsL)) {
 				if (result == "grounds out") {
 					if (locationRoll <= 20) {
 						result += " to catcher";
@@ -798,7 +798,7 @@ public class Game {
 				}				
 			}
 		} else if (pitch == "Changeup") {
-			if (batter.batsR) {
+			if (batter.batsR || (batter.batsS && pitcher.throwsL)) {
 				if (result == "grounds out") {
 					if (locationRoll <= 20) {
 						result += " to catcher";

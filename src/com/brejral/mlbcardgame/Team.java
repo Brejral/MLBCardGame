@@ -7,6 +7,7 @@ public class Team
 	public String teamName;
 	public String teamNickname;
 	public String teamAbrev;
+	public int color[] = new int[3];
 	public int overall;
 	public int logo;
 	public Card battingOrder[] = new Card[9];

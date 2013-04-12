@@ -413,6 +413,7 @@ public class CardDB {
 			card.imageId = R.drawable.justin_verlander;
 			card._sp = true;
 			card.throwsR = true;
+			card.batsR = true;
 			card.stats12L[0] = 536;
 			card.stats12L[1] = 106;
 			card.stats12L[2] = 28;
@@ -489,6 +490,7 @@ public class CardDB {
 			card.imageId = R.drawable.matt_cain;
 			card._sp = true;
 			card.throwsR = true;
+			card.batsR = true;
 			card.stats12L[0] = 424;
 			card.stats12L[1] = 98;
 			card.stats12L[2] = 22;
@@ -599,6 +601,7 @@ public class CardDB {
 			card.lastName = "Sandoval";
 			card.imageId = R.drawable.pablo_sandoval;
 			card._3b = true;
+			card.batsS = true;
 			card.stats12L[0] = 137;
 			card.stats12L[1] = 38;
 			card.stats12L[2] = 6;

@@ -35,7 +35,8 @@ public class GameActivity extends Activity {
 	public TextView homeTeamText, homeRuns;
 	public ImageView scoreboard, lineupBox, resultBox;
 	public int pit;
-	public float sHeight, sWidth, sRatio;
+	public int sHeight, sWidth;
+	public float sRatio;
 	public int sMargin, sLineupMargin;
 	public float backgroundRatio = 640f/375f;
 
@@ -56,8 +57,16 @@ public class GameActivity extends Activity {
 		resultBox = (ImageView)findViewById(R.id.resultbox);
 		inning = (TextView)findViewById(R.id.inning);
 		outs = (TextView)findViewById(R.id.outs);
-		
 		gameView = (GameView)findViewById(R.id.gl_surface_view);
+		
+		scoreboard.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				GameBoxScoreActivity.game = game;
+				Intent gameBoxScoreIntent = new Intent(getApplicationContext(), GameBoxScoreActivity.class);
+				GameActivity.this.startActivity(gameBoxScoreIntent);
+			}
+		});
 		
 		// Check if the system supports OpenGL ES 2.0
 		final ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
@@ -164,6 +173,8 @@ public class GameActivity extends Activity {
 		sHeight = displayMetrics.heightPixels;
 		sWidth = displayMetrics.widthPixels;
 		sRatio = sHeight/sWidth;
+		GameBoxScoreActivity.sHeight = sHeight;
+		GameBoxScoreActivity.sWidth = sWidth;
 		
 		LayoutParams layoutScoreboard = scoreboard.getLayoutParams();
 		LayoutParams layoutLineup = battingOrderText.getLayoutParams();
@@ -177,8 +188,8 @@ public class GameActivity extends Activity {
 		LayoutParams layoutAwayScore = awayRuns.getLayoutParams();
 		LayoutParams layoutHomeScore = homeRuns.getLayoutParams();
 
-		layoutScoreboard.width = (int) ((int)sWidth*.4f);
-		layoutScoreboard.height = (int) ((int)sWidth*.4f*600f/900f);
+		layoutScoreboard.width = (int) (sWidth*.4f);
+		layoutScoreboard.height = (int) (sWidth*.4f*600f/900f);
 		layoutInning.width = (int) (layoutScoreboard.width/900f*240f);
 		layoutInning.height = (int) (layoutScoreboard.height/600f*255f);
 		layoutOuts.width = (int) (layoutScoreboard.width/900f*100f);
@@ -196,8 +207,8 @@ public class GameActivity extends Activity {
 		layoutResultBox.width = (int) (sWidth - layoutScoreboard.width);
 		layoutResultBox.height = (int) (layoutScoreboard.height);
 		
-		sLineupMargin = (int) ((int)sWidth/1800f * 50f);
-		sMargin = (int) ((sHeight - backgroundRatio*sWidth)/2);
+		sLineupMargin = (int) (sWidth/1800f * 50f);
+		sMargin = (int) ((sHeight - backgroundRatio*sWidth)/2f);
 		((MarginLayoutParams) layoutLineup).setMargins(5, 0, 0, 2);
 		((MarginLayoutParams) layoutScoreboard).setMargins(0, 0, 0, 0);
 		((MarginLayoutParams) layoutLineupBox).setMargins(0, 0, 0, 0);

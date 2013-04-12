@@ -131,6 +131,9 @@ public class TeamDB {
 			team.teamAbrev = "BAL";
 			team.overall = 0;
 			team.logo = R.drawable.orioles_logo;
+			team.color[0] = 252;
+			team.color[1] = 78;
+			team.color[2] = 4;
 			break;
 		case 18:
 			team.teamName = "San Diego Padres";
