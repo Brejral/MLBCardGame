@@ -35,8 +35,10 @@
             
             <ImageView 
                 android:id="@+id/awayTeamLogo"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="match_parent"
+                android:layout_height="125dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/tigers_logo"
                 android:layout_gravity="center" />
                 
             
@@ -89,8 +91,10 @@
             
             <ImageView 
                 android:id="@+id/homeTeamLogo"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="match_parent"
+                android:layout_height="125dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/giants_logo"
                 android:layout_gravity="center" />
 
             <TextView

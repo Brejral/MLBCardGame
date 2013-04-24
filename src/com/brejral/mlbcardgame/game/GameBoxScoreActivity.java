@@ -1,14 +1,15 @@
 package com.brejral.mlbcardgame.game;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabSpec;
@@ -75,17 +76,39 @@ public class GameBoxScoreActivity extends Activity implements OnTabChangeListene
 		tabHost.setup();
 		tabHost.setOnTabChangedListener(this);
 		
-		Resources resources = getResources();
+		LinearLayout view = new LinearLayout(this);
+		ImageView image = new ImageView(this);
+		TextView text = new TextView(this);
+		LayoutParams layout = new LayoutParams((int) (sWidth * .15f),(int) (sWidth * .15f));
+		image.setLayoutParams(layout);
+		image.setImageResource(game.awayTeam.logo);
+		text.setText(game.awayTeam.teamName);
+		text.setTextSize(20);
+		view.addView(image);
+		view.addView(text);
+		view.setBackgroundColor(Color.rgb(game.awayTeam.color[0], game.awayTeam.color[1], game.awayTeam.color[2]));
 		
 		TabSpec tabSpecAway = tabHost
 				.newTabSpec(game.awayTeam.teamName)
-				.setIndicator("", resources.getDrawable(game.awayTeam.logo))
+				.setIndicator(view)
 				.setContent(R.id.awayTab);
-		
+
+		LinearLayout view2 = new LinearLayout(this);
+		ImageView image2 = new ImageView(this);
+		TextView text2 = new TextView(this);
+		LayoutParams layout2 = new LayoutParams((int) (sWidth * .15f),(int) (sWidth * .15f));
+		image2.setLayoutParams(layout2);
+		image2.setImageResource(game.homeTeam.logo);
+		text2.setText(game.homeTeam.teamName);
+		view2.addView(image2);
+		view2.addView(text2);		
+		view2.setBackgroundColor(Color.rgb(game.homeTeam.color[0], game.homeTeam.color[1], game.homeTeam.color[2]));
+
 		TabSpec tabSpecHome = tabHost
 				.newTabSpec(game.homeTeam.teamName)
-				.setIndicator("", resources.getDrawable(game.homeTeam.logo))
+				.setIndicator(view2)
 				.setContent(R.id.homeTab);
+		
 		
 		tabHost.addTab(tabSpecAway);
 		tabHost.addTab(tabSpecHome);
