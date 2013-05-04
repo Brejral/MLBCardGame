@@ -1,7 +1,6 @@
 package com.brejral.mlbcardgame.game;
 
 import android.app.Activity;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -16,6 +15,7 @@ import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 
 import com.brejral.mlbcardgame.R;
+import com.brejral.mlbcardgame.Team;
 
 public class GameBoxScoreActivity extends Activity implements OnTabChangeListener {
 	public TextView awayTeamText, awayRuns, awayHits, awayInningScore[];
@@ -24,6 +24,8 @@ public class GameBoxScoreActivity extends Activity implements OnTabChangeListene
 	public static Game game;
 	public static int sWidth, sHeight;
 	private TabHost tabHost;
+	private TabSpec tabSpecAway, tabSpecHome;
+	private LinearLayout tabHome, tabAway;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -68,54 +70,31 @@ public class GameBoxScoreActivity extends Activity implements OnTabChangeListene
 		
 		setBoxScore();
 		setBoxScoreTabs();
-		setTeamBoxScore();
+		setTeamBoxScore(game.awayTeam);
+		updateScoreboard();
 	}
 	
 	public void setBoxScoreTabs() {
 		tabHost = (TabHost)findViewById(R.id.tabhost);
 		tabHost.setup();
 		tabHost.setOnTabChangedListener(this);
-		
-		LinearLayout view = new LinearLayout(this);
-		ImageView image = new ImageView(this);
-		TextView text = new TextView(this);
-		LayoutParams layout = new LayoutParams((int) (sWidth * .15f),(int) (sWidth * .15f));
-		image.setLayoutParams(layout);
-		image.setImageResource(game.awayTeam.logo);
-		text.setText(game.awayTeam.teamName);
-		text.setTextSize(20);
-		view.addView(image);
-		view.addView(text);
-		view.setBackgroundColor(Color.rgb(game.awayTeam.color[0], game.awayTeam.color[1], game.awayTeam.color[2]));
-		
-		TabSpec tabSpecAway = tabHost
+				
+		tabSpecAway = tabHost
 				.newTabSpec(game.awayTeam.teamName)
-				.setIndicator(view)
+				.setIndicator(game.awayTeam.teamName, getResources().getDrawable(game.awayTeam.logo))
 				.setContent(R.id.awayTab);
 
-		LinearLayout view2 = new LinearLayout(this);
-		ImageView image2 = new ImageView(this);
-		TextView text2 = new TextView(this);
-		LayoutParams layout2 = new LayoutParams((int) (sWidth * .15f),(int) (sWidth * .15f));
-		image2.setLayoutParams(layout2);
-		image2.setImageResource(game.homeTeam.logo);
-		text2.setText(game.homeTeam.teamName);
-		view2.addView(image2);
-		view2.addView(text2);		
-		view2.setBackgroundColor(Color.rgb(game.homeTeam.color[0], game.homeTeam.color[1], game.homeTeam.color[2]));
-
-		TabSpec tabSpecHome = tabHost
+		tabSpecHome = tabHost
 				.newTabSpec(game.homeTeam.teamName)
-				.setIndicator(view2)
+				.setIndicator(game.homeTeam.teamName, getResources().getDrawable(game.homeTeam.logo))
 				.setContent(R.id.homeTab);
-		
-		
+				
 		tabHost.addTab(tabSpecAway);
 		tabHost.addTab(tabSpecHome);
 		
 	}
 	
-	public void setTeamBoxScore() {
+	public void setTeamBoxScore(Team team) {
 		
 	}
 	
@@ -278,10 +257,27 @@ public class GameBoxScoreActivity extends Activity implements OnTabChangeListene
 		homeHits.setLayoutParams(layoutParams);
 		homeHits.setText("0");
 	}
+	
+	public void updateScoreboard() {
+		homeRuns.setText(Integer.toString(game.homeScore));
+		awayRuns.setText(Integer.toString(game.awayScore));
+		
+		for (int i = 0; i < game.inning; i++) {
+			awayInningScore[i].setText(Integer.toString(game.awayInningScores[i]));
+			if (game.topOfInning == false && i != game.inning - 1)
+				homeInningScore[i].setText(Integer.toString(game.homeInningScores[i]));	
+		}
+	}
+		
+			
 
 	@Override
-	public void onTabChanged(String arg0) {
-		// TODO Auto-generated method stub
+	public void onTabChanged(String tabId) {
+		if (tabId.equals("First")) {
+			setTeamBoxScore(game.awayTeam);
+		} else if (tabId.equals("Second")) {
+			setTeamBoxScore(game.homeTeam);
+		}
 		
 	}
 
