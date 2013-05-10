@@ -1,5 +1,7 @@
 package com.brejral.mlbcardgame;
 
+import java.text.DecimalFormat;
+
 public class Card {
 	public int id;  
 	public String name, lastName;
@@ -80,4 +82,61 @@ public class Card {
 		CardDB.populateCard(this);
 	}
 
+	public String averageGame() {
+		DecimalFormat df = new DecimalFormat("#.000");
+		double avg;
+		if ((gameStats[0] - gameStats[6] - gameStats[8]) > 0)
+			avg = (double)gameStats[2]/((double)gameStats[0]-(double)gameStats[6]-(double)gameStats[8]);
+		else
+			avg = 0f;
+		return df.format(avg);
+	}
+	
+	public String eraGame() {
+		if (gameStats[1] == 0) {
+			if (gameStats[9] > 0)
+				return "Inf";
+			else
+				return ".000";
+		} else {
+			DecimalFormat df = new DecimalFormat("#.000");
+			double era;
+			era = (double)gameStats[9]/((double)gameStats[1]/3f)*9f;
+			return df.format(era);
+		}
+	}
+	
+	public String whipGame() {
+		if (gameStats[1] == 0) {
+			if ((gameStats[2]+gameStats[6]) > 0)
+				return "Inf";
+			else
+				return ".000";
+		} else {
+			DecimalFormat df = new DecimalFormat("#.000");
+			double whip;
+			whip = (double)(gameStats[2]+gameStats[6])/((double)gameStats[1]/3f);
+			return df.format(whip);
+		}
+		
+	}
+	
+	public String ipGame() {
+		DecimalFormat df = new DecimalFormat("##0.0");
+		if (gameStats[1] == 0) {
+			return "0.0";			
+		} else {
+			double ipd;
+			int ipi;
+			ipi = gameStats[1]/3;
+			ipd = (double)gameStats[1]/3f;
+			if (ipd - (double)ipi > .5f) {
+				return df.format((double)ipi + .2f);
+			} else if (ipd - (double)ipi > 0f) {
+				return df.format((double)ipi + .1f);					
+			} else {
+				return df.format((double)ipi);
+			}
+		}
+	}
 }

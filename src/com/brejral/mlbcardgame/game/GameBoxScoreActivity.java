@@ -1,21 +1,22 @@
 package com.brejral.mlbcardgame.game;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabSpec;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.brejral.mlbcardgame.Card;
 import com.brejral.mlbcardgame.R;
-import com.brejral.mlbcardgame.Team;
 
 public class GameBoxScoreActivity extends Activity implements OnTabChangeListener {
 	public TextView awayTeamText, awayRuns, awayHits, awayInningScore[];
@@ -25,7 +26,9 @@ public class GameBoxScoreActivity extends Activity implements OnTabChangeListene
 	public static int sWidth, sHeight;
 	private TabHost tabHost;
 	private TabSpec tabSpecAway, tabSpecHome;
-	private LinearLayout tabHome, tabAway;
+	private TableLayout awayTable, homeTable;
+	private TableRow headerRow, dataRow;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -60,6 +63,9 @@ public class GameBoxScoreActivity extends Activity implements OnTabChangeListene
 		homeInningScore[8] = (TextView)findViewById(R.id.homeInning9);
 		homeRuns = (TextView)findViewById(R.id.homeRuns);
 		homeHits = (TextView)findViewById(R.id.homeHits);
+		awayTable = (TableLayout)findViewById(R.id.awayTableLayout);
+		homeTable = (TableLayout)findViewById(R.id.homeTableLayout);
+		
 		
 		scoreboard.setOnClickListener(new OnClickListener() {
 			@Override
@@ -70,7 +76,7 @@ public class GameBoxScoreActivity extends Activity implements OnTabChangeListene
 		
 		setBoxScore();
 		setBoxScoreTabs();
-		setTeamBoxScore(game.awayTeam);
+		setTeamBoxScores();
 		updateScoreboard();
 	}
 	
@@ -82,20 +88,295 @@ public class GameBoxScoreActivity extends Activity implements OnTabChangeListene
 		tabSpecAway = tabHost
 				.newTabSpec(game.awayTeam.teamName)
 				.setIndicator(game.awayTeam.teamName, getResources().getDrawable(game.awayTeam.logo))
-				.setContent(R.id.awayTab);
+				.setContent(R.id.scrollViewAway);
 
 		tabSpecHome = tabHost
 				.newTabSpec(game.homeTeam.teamName)
 				.setIndicator(game.homeTeam.teamName, getResources().getDrawable(game.homeTeam.logo))
-				.setContent(R.id.homeTab);
+				.setContent(R.id.scrollViewHome);
 				
 		tabHost.addTab(tabSpecAway);
 		tabHost.addTab(tabSpecHome);
 		
 	}
 	
-	public void setTeamBoxScore(Team team) {
+	public void setTeamBoxScores() {
+		TextView awayHitting = (TextView)findViewById(R.id.awayTableHeaderTeamNameHitting);
+		awayHitting.setText(game.awayTeam.teamNickname+" Hitting");
+		TextView abText = (TextView)findViewById(R.id.abTableHeader);
+		TextView rText = (TextView)findViewById(R.id.rTableHeader);
+		TextView hText = (TextView)findViewById(R.id.hTableHeader);
+		TextView hrText = (TextView)findViewById(R.id.hrTableHeader);
+		TextView bbText = (TextView)findViewById(R.id.bbTableHeader);
+		TextView soText = (TextView)findViewById(R.id.soTableHeader);
+		TextView rbiText = (TextView)findViewById(R.id.rbiTableHeader);
+		TextView avgText = (TextView)findViewById(R.id.avgTableHeader);
+		TextView ipTextp = (TextView)findViewById(R.id.ipTableHeaderP);
+		TextView hTextp = (TextView)findViewById(R.id.hTableHeaderP);
+		TextView rTextp = (TextView)findViewById(R.id.rTableHeaderP);
+		TextView erTextp = (TextView)findViewById(R.id.erTableHeaderP);
+		TextView bbTextp = (TextView)findViewById(R.id.bbTableHeaderP);
+		TextView soTextp = (TextView)findViewById(R.id.soTableHeaderP);
+		TextView hrTextp = (TextView)findViewById(R.id.hrTableHeaderP);
+		TextView eraTextp = (TextView)findViewById(R.id.eraTableHeaderP);
+		LayoutInflater inflate = LayoutInflater.from(this);
 		
+		for (int i = 0; i < game.awayTeam.battingOrder.length; i++) {
+			Card card = game.awayTeam.battingOrder[i];
+			TableRow row = new TableRow(this);
+			
+			TextView name = new TextView(this);
+			LayoutParams namep = awayHitting.getLayoutParams();
+			name.setText(card.name);
+			name.setLayoutParams(namep);
+			row.addView(name);
+			
+			TextView ab = new TextView(this);
+			LayoutParams abp = abText.getLayoutParams();
+			int abnum = card.gameStats[0]-card.gameStats[6]-card.gameStats[8];
+			ab.setText(Integer.toString(abnum));
+			ab.setLayoutParams(abp);
+			row.addView(ab);
+			
+			TextView r = new TextView(this);
+			LayoutParams rp = rText.getLayoutParams();
+			r.setText(Integer.toString(card.gameStats[9]));
+			r.setLayoutParams(rp);
+			row.addView(r);
+
+			TextView h = new TextView(this);
+			LayoutParams hp = hText.getLayoutParams();
+			h.setText(Integer.toString(card.gameStats[2]));
+			h.setLayoutParams(hp);
+			row.addView(h);
+
+			TextView hr = new TextView(this);
+			LayoutParams hrp = hrText.getLayoutParams();
+			hr.setText(Integer.toString(card.gameStats[5]));
+			hr.setLayoutParams(hrp);
+			row.addView(hr);
+
+			TextView rbi = new TextView(this);
+			LayoutParams rbip = rbiText.getLayoutParams();
+			rbi.setText(Integer.toString(card.gameStats[10]));
+			rbi.setLayoutParams(rbip);
+			row.addView(rbi);
+
+			TextView bb = new TextView(this);
+			LayoutParams bbp = bbText.getLayoutParams();
+			bb.setText(Integer.toString(card.gameStats[6]));
+			bb.setLayoutParams(bbp);
+			row.addView(bb);
+
+			TextView so = new TextView(this);
+			LayoutParams sop = soText.getLayoutParams();
+			so.setText(Integer.toString(card.gameStats[7]));
+			so.setLayoutParams(sop);
+			row.addView(so);
+
+			TextView avg = new TextView(this);
+			LayoutParams avgp = avgText.getLayoutParams();
+			avg.setText(card.averageGame());
+			avg.setLayoutParams(avgp);
+			row.addView(avg);
+			
+			awayTable.addView(row);
+		}
+
+		TableRow tr = new TableRow(this);
+		awayTable.addView(tr);
+		
+		
+		for (int i = 0; i < game.awayTeam.pitchersUsed.length; i++) {
+			Card card = game.awayTeam.pitchersUsed[i];
+			TableRow row = new TableRow(this);
+			
+			TextView name = new TextView(this);
+			LayoutParams namep = awayHitting.getLayoutParams();
+			name.setText(card.name);
+			name.setLayoutParams(namep);
+			row.addView(name);
+			
+			TextView ip = new TextView(this);
+			LayoutParams ipp = abText.getLayoutParams();
+			ip.setText(card.ipGame());
+			ip.setLayoutParams(ipp);
+			row.addView(ip);
+			
+			TextView h = new TextView(this);
+			LayoutParams hp = hText.getLayoutParams();
+			h.setText(Integer.toString(card.gameStats[2]));
+			h.setLayoutParams(hp);
+			row.addView(h);
+
+			TextView r = new TextView(this);
+			LayoutParams rp = rText.getLayoutParams();
+			r.setText(Integer.toString(card.gameStats[9]));
+			r.setLayoutParams(rp);
+			row.addView(r);
+
+			TextView er = new TextView(this);
+			LayoutParams erp = hrText.getLayoutParams();
+			er.setText(Integer.toString(card.gameStats[9]));
+			er.setLayoutParams(erp);
+			row.addView(er);
+
+			TextView bb = new TextView(this);
+			LayoutParams bbp = bbText.getLayoutParams();
+			bb.setText(Integer.toString(card.gameStats[6]));
+			bb.setLayoutParams(bbp);
+			row.addView(bb);
+
+			TextView so = new TextView(this);
+			LayoutParams sop = soText.getLayoutParams();
+			so.setText(Integer.toString(card.gameStats[6]));
+			so.setLayoutParams(sop);
+			row.addView(so);
+
+			TextView hr = new TextView(this);
+			LayoutParams hrp = hrText.getLayoutParams();
+			hr.setText(Integer.toString(card.gameStats[5]));
+			hr.setLayoutParams(hrp);
+			row.addView(hr);
+
+			TextView era = new TextView(this);
+			LayoutParams erap = avgText.getLayoutParams();
+			era.setText(card.eraGame());
+			era.setLayoutParams(erap);
+			row.addView(era);
+			
+			awayTable.addView(row);			
+		}
+
+		TextView homeHitting = (TextView)findViewById(R.id.homeTableHeaderTeamNameHitting);
+		homeHitting.setText(game.homeTeam.teamNickname+" Hitting");	
+		
+		for (int i = 0; i < game.homeTeam.battingOrder.length; i++) {
+			Card card = game.homeTeam.battingOrder[i];
+			TableRow row = new TableRow(this);
+			
+			TextView name = new TextView(this);
+			LayoutParams namep = homeHitting.getLayoutParams();
+			name.setText(card.name);
+			name.setLayoutParams(namep);
+			row.addView(name);
+			
+			TextView ab = new TextView(this);
+			LayoutParams abp = abText.getLayoutParams();
+			int abnum = card.gameStats[0]-card.gameStats[6]-card.gameStats[8];
+			ab.setText(Integer.toString(abnum));
+			ab.setLayoutParams(abp);
+			row.addView(ab);
+			
+			TextView r = new TextView(this);
+			LayoutParams rp = rText.getLayoutParams();
+			r.setText(Integer.toString(card.gameStats[9]));
+			r.setLayoutParams(rp);
+			row.addView(r);
+
+			TextView h = new TextView(this);
+			LayoutParams hp = hText.getLayoutParams();
+			h.setText(Integer.toString(card.gameStats[2]));
+			h.setLayoutParams(hp);
+			row.addView(h);
+
+			TextView hr = new TextView(this);
+			LayoutParams hrp = hrText.getLayoutParams();
+			hr.setText(Integer.toString(card.gameStats[5]));
+			hr.setLayoutParams(hrp);
+			row.addView(hr);
+
+			TextView rbi = new TextView(this);
+			LayoutParams rbip = rbiText.getLayoutParams();
+			rbi.setText(Integer.toString(card.gameStats[10]));
+			rbi.setLayoutParams(rbip);
+			row.addView(rbi);
+
+			TextView bb = new TextView(this);
+			LayoutParams bbp = bbText.getLayoutParams();
+			bb.setText(Integer.toString(card.gameStats[6]));
+			bb.setLayoutParams(bbp);
+			row.addView(bb);
+
+			TextView so = new TextView(this);
+			LayoutParams sop = soText.getLayoutParams();
+			so.setText(Integer.toString(card.gameStats[7]));
+			so.setLayoutParams(sop);
+			row.addView(so);
+
+			TextView avg = new TextView(this);
+			LayoutParams avgp = avgText.getLayoutParams();
+			avg.setText(card.averageGame());
+			avg.setLayoutParams(avgp);
+			row.addView(avg);
+			
+			homeTable.addView(row);
+		}
+
+		TableRow tr2 = new TableRow(this);
+		homeTable.addView(tr2);
+		
+		
+		for (int i = 0; i < game.homeTeam.pitchersUsed.length; i++) {
+			Card card = game.homeTeam.pitchersUsed[i];
+			TableRow row = new TableRow(this);
+			
+			TextView name = new TextView(this);
+			LayoutParams namep = homeHitting.getLayoutParams();
+			name.setText(card.name);
+			name.setLayoutParams(namep);
+			row.addView(name);
+			
+			TextView ip = new TextView(this);
+			LayoutParams ipp = abText.getLayoutParams();
+			ip.setText(card.ipGame());
+			ip.setLayoutParams(ipp);
+			row.addView(ip);
+			
+			TextView h = new TextView(this);
+			LayoutParams hp = hText.getLayoutParams();
+			h.setText(Integer.toString(card.gameStats[2]));
+			h.setLayoutParams(hp);
+			row.addView(h);
+
+			TextView r = new TextView(this);
+			LayoutParams rp = rText.getLayoutParams();
+			r.setText(Integer.toString(card.gameStats[9]));
+			r.setLayoutParams(rp);
+			row.addView(r);
+
+			TextView er = new TextView(this);
+			LayoutParams erp = hrText.getLayoutParams();
+			er.setText(Integer.toString(card.gameStats[9]));
+			er.setLayoutParams(erp);
+			row.addView(er);
+
+			TextView bb = new TextView(this);
+			LayoutParams bbp = bbText.getLayoutParams();
+			bb.setText(Integer.toString(card.gameStats[6]));
+			bb.setLayoutParams(bbp);
+			row.addView(bb);
+
+			TextView so = new TextView(this);
+			LayoutParams sop = soText.getLayoutParams();
+			so.setText(Integer.toString(card.gameStats[6]));
+			so.setLayoutParams(sop);
+			row.addView(so);
+
+			TextView hr = new TextView(this);
+			LayoutParams hrp = hrText.getLayoutParams();
+			hr.setText(Integer.toString(card.gameStats[5]));
+			hr.setLayoutParams(hrp);
+			row.addView(hr);
+
+			TextView era = new TextView(this);
+			LayoutParams erap = avgText.getLayoutParams();
+			era.setText(card.eraGame());
+			era.setLayoutParams(erap);
+			row.addView(era);
+			
+			homeTable.addView(row);			
+		}
 	}
 	
 	public void setBoxScore() {
@@ -261,10 +542,12 @@ public class GameBoxScoreActivity extends Activity implements OnTabChangeListene
 	public void updateScoreboard() {
 		homeRuns.setText(Integer.toString(game.homeScore));
 		awayRuns.setText(Integer.toString(game.awayScore));
+		homeHits.setText(Integer.toString(game.homeHits));
+		awayHits.setText(Integer.toString(game.awayHits));
 		
 		for (int i = 0; i < game.inning; i++) {
 			awayInningScore[i].setText(Integer.toString(game.awayInningScores[i]));
-			if (game.topOfInning == false && i != game.inning - 1)
+			if (game.topOfInning == false || i != game.inning - 1)
 				homeInningScore[i].setText(Integer.toString(game.homeInningScores[i]));	
 		}
 	}
@@ -273,11 +556,6 @@ public class GameBoxScoreActivity extends Activity implements OnTabChangeListene
 
 	@Override
 	public void onTabChanged(String tabId) {
-		if (tabId.equals("First")) {
-			setTeamBoxScore(game.awayTeam);
-		} else if (tabId.equals("Second")) {
-			setTeamBoxScore(game.homeTeam);
-		}
 		
 	}
 

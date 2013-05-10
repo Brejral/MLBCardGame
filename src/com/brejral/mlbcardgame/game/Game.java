@@ -30,12 +30,16 @@ public class Game {
 	public Game(Team home, Team away) {
 		homeTeam = home;
 		awayTeam = away;
+		homeTeam.pitchersUsed[0] = homeTeam.positions[1];
+		awayTeam.pitchersUsed[0] = awayTeam.positions[1];
 		pitcher = homeTeam.positions[1];
 		batter = awayTeam.battingOrder[awayTeam.battingOrderNum];
 
 	}
 		
 	public void pitch(int n) {
+		pitcher.gameStats[0]++;
+		batter.gameStats[0]++;
 		pitchRoll(n);
 		advanceBatterNum();
 		checkEndOfInning();
@@ -249,6 +253,7 @@ public class Game {
 	public void groundBallOut() {
 		result = "grounds out";
 		outs++;
+		pitcher.gameStats[1]++;
 		hitLocation();
 	}
 	
@@ -262,12 +267,14 @@ public class Game {
 	public void flyBallOut() {
 		result = "flies out";
 		outs++;
+		pitcher.gameStats[1]++;
 		hitLocation();
 	}
 	
 	public void infieldFlyBallOut() {
 		result = "Infield flies out";
 		outs++;
+		pitcher.gameStats[1]++;
 		hitLocation();
 	}
 	

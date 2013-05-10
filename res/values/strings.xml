@@ -30,6 +30,7 @@
 	<string name="avg">AVG</string>
 	<string name="bb">BB</string>
 	<string name="so">SO</string>
-	<string name="obp">OBP</string>
-	<string name="slg">SLG</string>
+	<string name="rbi">RBI</string>
+	<string name="er">ER</string>
+	<string name="era">ERA</string>
 </resources>
