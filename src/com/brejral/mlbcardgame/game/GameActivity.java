@@ -30,10 +30,11 @@ public class GameActivity extends Activity {
 	private GameView gameView;
 	public GameRenderer gameRenderer;
 	public static Game game;
-	public TextView resultText, battingOrderText, inning, outs;
-	public TextView awayTeamText, awayRuns;
-	public TextView homeTeamText, homeRuns;
-	public ImageView scoreboard, lineupBox, resultBox;
+	public static LinearLayout pitchButtons;
+	public static TextView resultText, battingOrderText, inning, outs;
+	public static TextView awayTeamText, awayRuns;
+	public static TextView homeTeamText, homeRuns;
+	public static ImageView scoreboard, lineupBox, resultBox;
 	public int pit;
 	public int sHeight, sWidth;
 	public float sRatio;
@@ -107,7 +108,7 @@ public class GameActivity extends Activity {
 	}
 	
 	public void setPitchButtons() {
-		LinearLayout pitchButtons = (LinearLayout)findViewById(R.id.pitchButtons);
+		pitchButtons = (LinearLayout)findViewById(R.id.pitchButtons);
 		LayoutParams layoutBottom = pitchButtons.getLayoutParams();
 		((MarginLayoutParams) layoutBottom).setMargins(0, 0, 0, 0);
 		pitchButtons.setLayoutParams(layoutBottom);
@@ -244,8 +245,9 @@ public class GameActivity extends Activity {
 	
 	public void checkEndOfGame() {
 		if (game.endOfGame) {
-			Intent mainMenuIntent = new Intent(getApplicationContext(), MainMenu.class);
-			GameActivity.this.startActivity(mainMenuIntent);
+			GameBoxScoreActivity.game = game;
+			Intent boxScoreIntent = new Intent(getApplicationContext(), GameBoxScoreActivity.class);
+			GameActivity.this.startActivity(boxScoreIntent);
 			GameActivity.this.finish();
 		}
 	}

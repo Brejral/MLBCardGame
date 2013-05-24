@@ -1,6 +1,7 @@
 package com.brejral.mlbcardgame.game;
 
 import android.app.Activity;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 
 import com.brejral.mlbcardgame.Card;
 import com.brejral.mlbcardgame.R;
+import com.brejral.mlbcardgame.Team;
 
 public class GameBoxScoreActivity extends Activity implements OnTabChangeListener {
 	public TextView awayTeamText, awayRuns, awayHits, awayInningScore[];
@@ -27,7 +29,6 @@ public class GameBoxScoreActivity extends Activity implements OnTabChangeListene
 	private TabHost tabHost;
 	private TabSpec tabSpecAway, tabSpecHome;
 	private TableLayout awayTable, homeTable;
-	private TableRow headerRow, dataRow;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -111,15 +112,6 @@ public class GameBoxScoreActivity extends Activity implements OnTabChangeListene
 		TextView soText = (TextView)findViewById(R.id.soTableHeader);
 		TextView rbiText = (TextView)findViewById(R.id.rbiTableHeader);
 		TextView avgText = (TextView)findViewById(R.id.avgTableHeader);
-		TextView ipTextp = (TextView)findViewById(R.id.ipTableHeaderP);
-		TextView hTextp = (TextView)findViewById(R.id.hTableHeaderP);
-		TextView rTextp = (TextView)findViewById(R.id.rTableHeaderP);
-		TextView erTextp = (TextView)findViewById(R.id.erTableHeaderP);
-		TextView bbTextp = (TextView)findViewById(R.id.bbTableHeaderP);
-		TextView soTextp = (TextView)findViewById(R.id.soTableHeaderP);
-		TextView hrTextp = (TextView)findViewById(R.id.hrTableHeaderP);
-		TextView eraTextp = (TextView)findViewById(R.id.eraTableHeaderP);
-		LayoutInflater inflate = LayoutInflater.from(this);
 		
 		for (int i = 0; i < game.awayTeam.battingOrder.length; i++) {
 			Card card = game.awayTeam.battingOrder[i];
@@ -127,7 +119,7 @@ public class GameBoxScoreActivity extends Activity implements OnTabChangeListene
 			
 			TextView name = new TextView(this);
 			LayoutParams namep = awayHitting.getLayoutParams();
-			name.setText(card.name);
+			name.setText(card.name + ", " + game.awayTeam.findPosition(i));
 			name.setLayoutParams(namep);
 			row.addView(name);
 			
@@ -184,7 +176,12 @@ public class GameBoxScoreActivity extends Activity implements OnTabChangeListene
 		}
 
 		TableRow tr = new TableRow(this);
+		TextView tv = new TextView(this);
+		tv.setText(" ");
+		tr.addView(tv);
 		awayTable.addView(tr);
+		
+		addPitcherHeader(awayTable, game.awayTeam);
 		
 		
 		for (int i = 0; i < game.awayTeam.pitchersUsed.length; i++) {
@@ -209,12 +206,6 @@ public class GameBoxScoreActivity extends Activity implements OnTabChangeListene
 			h.setLayoutParams(hp);
 			row.addView(h);
 
-			TextView r = new TextView(this);
-			LayoutParams rp = rText.getLayoutParams();
-			r.setText(Integer.toString(card.gameStats[9]));
-			r.setLayoutParams(rp);
-			row.addView(r);
-
 			TextView er = new TextView(this);
 			LayoutParams erp = hrText.getLayoutParams();
 			er.setText(Integer.toString(card.gameStats[9]));
@@ -229,7 +220,7 @@ public class GameBoxScoreActivity extends Activity implements OnTabChangeListene
 
 			TextView so = new TextView(this);
 			LayoutParams sop = soText.getLayoutParams();
-			so.setText(Integer.toString(card.gameStats[6]));
+			so.setText(Integer.toString(card.gameStats[7]));
 			so.setLayoutParams(sop);
 			row.addView(so);
 
@@ -245,6 +236,12 @@ public class GameBoxScoreActivity extends Activity implements OnTabChangeListene
 			era.setLayoutParams(erap);
 			row.addView(era);
 			
+			TextView whip = new TextView(this);
+			LayoutParams whipp = avgText.getLayoutParams();
+			whip.setText(card.whipGame());
+			whip.setLayoutParams(whipp);
+			row.addView(whip);
+
 			awayTable.addView(row);			
 		}
 
@@ -257,7 +254,7 @@ public class GameBoxScoreActivity extends Activity implements OnTabChangeListene
 			
 			TextView name = new TextView(this);
 			LayoutParams namep = homeHitting.getLayoutParams();
-			name.setText(card.name);
+			name.setText(card.name + ", " + game.homeTeam.findPosition(i));
 			name.setLayoutParams(namep);
 			row.addView(name);
 			
@@ -314,8 +311,12 @@ public class GameBoxScoreActivity extends Activity implements OnTabChangeListene
 		}
 
 		TableRow tr2 = new TableRow(this);
+		TextView tv2 = new TextView(this);
+		tv2.setText(" ");
+		tr2.addView(tv2);
 		homeTable.addView(tr2);
 		
+		addPitcherHeader(homeTable, game.homeTeam);		
 		
 		for (int i = 0; i < game.homeTeam.pitchersUsed.length; i++) {
 			Card card = game.homeTeam.pitchersUsed[i];
@@ -339,12 +340,6 @@ public class GameBoxScoreActivity extends Activity implements OnTabChangeListene
 			h.setLayoutParams(hp);
 			row.addView(h);
 
-			TextView r = new TextView(this);
-			LayoutParams rp = rText.getLayoutParams();
-			r.setText(Integer.toString(card.gameStats[9]));
-			r.setLayoutParams(rp);
-			row.addView(r);
-
 			TextView er = new TextView(this);
 			LayoutParams erp = hrText.getLayoutParams();
 			er.setText(Integer.toString(card.gameStats[9]));
@@ -359,7 +354,7 @@ public class GameBoxScoreActivity extends Activity implements OnTabChangeListene
 
 			TextView so = new TextView(this);
 			LayoutParams sop = soText.getLayoutParams();
-			so.setText(Integer.toString(card.gameStats[6]));
+			so.setText(Integer.toString(card.gameStats[7]));
 			so.setLayoutParams(sop);
 			row.addView(so);
 
@@ -374,7 +369,13 @@ public class GameBoxScoreActivity extends Activity implements OnTabChangeListene
 			era.setText(card.eraGame());
 			era.setLayoutParams(erap);
 			row.addView(era);
-			
+
+			TextView whip = new TextView(this);
+			LayoutParams whipp = avgText.getLayoutParams();
+			whip.setText(card.whipGame());
+			whip.setLayoutParams(whipp);
+			row.addView(whip);
+
 			homeTable.addView(row);			
 		}
 	}
@@ -540,15 +541,28 @@ public class GameBoxScoreActivity extends Activity implements OnTabChangeListene
 	}
 	
 	public void updateScoreboard() {
+		if (game.homeScore > 9)
+			homeRuns.setTextSize(16f);
 		homeRuns.setText(Integer.toString(game.homeScore));
+		if (game.awayScore > 9)
+			awayRuns.setTextSize(16f);
 		awayRuns.setText(Integer.toString(game.awayScore));
+		if (game.homeHits > 9)
+			homeHits.setTextSize(16f);
 		homeHits.setText(Integer.toString(game.homeHits));
+		if (game.awayHits > 9)
+			awayHits.setTextSize(16f);
 		awayHits.setText(Integer.toString(game.awayHits));
 		
 		for (int i = 0; i < game.inning; i++) {
+			if (game.awayInningScores[i] > 9)
+				awayInningScore[i].setTextSize(16f);
 			awayInningScore[i].setText(Integer.toString(game.awayInningScores[i]));
-			if (game.topOfInning == false || i != game.inning - 1)
+			if (game.topOfInning == false || i != game.inning - 1) {
+				if (game.homeInningScores[i] > 9)
+					homeInningScore[i].setTextSize(16f);
 				homeInningScore[i].setText(Integer.toString(game.homeInningScores[i]));	
+			}
 		}
 	}
 		
@@ -557,6 +571,69 @@ public class GameBoxScoreActivity extends Activity implements OnTabChangeListene
 	@Override
 	public void onTabChanged(String tabId) {
 		
+	}
+	
+	private void addPitcherHeader(TableLayout table, Team team) {
+		TableRow row = new TableRow(this);
+		TextView hitting = (TextView)findViewById(R.id.awayTableHeaderTeamNameHitting);
+		TextView ab = (TextView)findViewById(R.id.abTableHeader);
+
+		
+		TextView pitching = new TextView(this);
+		pitching.setText(team.teamNickname + " Pitching");
+		pitching.setLayoutParams(hitting.getLayoutParams());
+		pitching.setTypeface(null, Typeface.BOLD);
+		row.addView(pitching);
+
+		TextView ip = new TextView(this);
+		ip.setText("IP");
+		ip.setLayoutParams(ab.getLayoutParams());
+		ip.setTypeface(null, Typeface.BOLD);
+		row.addView(ip);
+
+		TextView h = new TextView(this);
+		h.setText("H");
+		h.setLayoutParams(ab.getLayoutParams());
+		h.setTypeface(null, Typeface.BOLD);
+		row.addView(h);
+
+		TextView er = new TextView(this);
+		er.setText("ER");
+		er.setLayoutParams(ab.getLayoutParams());
+		er.setTypeface(null, Typeface.BOLD);
+		row.addView(er);
+
+		TextView bb = new TextView(this);
+		bb.setText("BB");
+		bb.setLayoutParams(ab.getLayoutParams());
+		bb.setTypeface(null, Typeface.BOLD);
+		row.addView(bb);
+
+		TextView so = new TextView(this);
+		so.setText("SO");
+		so.setLayoutParams(ab.getLayoutParams());
+		so.setTypeface(null, Typeface.BOLD);
+		row.addView(so);
+
+		TextView hr = new TextView(this);
+		hr.setText("HR");
+		hr.setLayoutParams(ab.getLayoutParams());
+		hr.setTypeface(null, Typeface.BOLD);
+		row.addView(hr);
+
+		TextView era = new TextView(this);
+		era.setText("ERA");
+		era.setLayoutParams(ab.getLayoutParams());
+		era.setTypeface(null, Typeface.BOLD);
+		row.addView(era);
+
+		TextView whip = new TextView(this);
+		whip.setText("WHIP");
+		whip.setLayoutParams(ab.getLayoutParams());
+		whip.setTypeface(null, Typeface.BOLD);
+		row.addView(whip);
+		
+		table.addView(row);
 	}
 
 }
